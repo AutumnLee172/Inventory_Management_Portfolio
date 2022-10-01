@@ -27103,6 +27103,7 @@ pre[class*=language-] {
 
 .bg-bluecolor{
   background-color: #5e72e4 !important;
+  z-index: -99;
 }
 
 .pgcontainer{

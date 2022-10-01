@@ -4,9 +4,8 @@
     <header class="app-header">
       
     </header>
-    
-    <main class="container-fluid py-4">
-      <nav-bar></nav-bar>
+    <nav-bar></nav-bar>
+    <main class="main-content position-relative border-radius-lg ps">
       <router-view />
     </main>
     
