@@ -1,0 +1,16 @@
+.bg-primary {
+    background-color: #5e72e4 !important;
+  }
+
+.bg-bluecolor{
+  background-color: #5e72e4 !important;
+}
+
+.pgcontainer{
+  display: block;
+}
+
+.row-container{
+  width: 80%;
+  margin-left: 15%;
+}

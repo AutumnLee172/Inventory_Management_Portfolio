@@ -1,0 +1,25 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+@import "argon-dashboard/bootstrap/functions";
+
+// Custom Variables
+@import "argon-dashboard/custom/variables";
+
+// Theme Variables
+@import "argon-dashboard/variables";
+
+// Bootstrap Core
+@import "argon-dashboard/bootstrap/bootstrap";
+
+// Theme Core
+@import "argon-dashboard/theme";
+
+// Custom Variables
+@import "argon-dashboard/custom/styles";
