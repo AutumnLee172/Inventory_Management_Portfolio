@@ -70,4 +70,22 @@ class ProductsController extends Controller
             'data' => $product
         ]);
     }
+
+    public function upload(Request $request, $id)
+    {
+        $product = Product::find($id);
+        $uploadedFile = $request->file('file');
+       
+        // if (!$uploadedFile->isValid()) {
+        //     abort( 422 );
+        // }
+        $product->image_name = $uploadedFile->getClientOriginalName();
+        $storePath = $uploadedFile->store('products', ['disk' => 'my_files']);
+        $product->image = $storePath;
+
+        $product->save();
+        return response()->json([
+            'status' => true
+        ]);
+    }
 }

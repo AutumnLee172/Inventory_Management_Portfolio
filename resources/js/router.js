@@ -22,6 +22,11 @@ export default new Router({
       name: 'products',
       component: () => import('./views/Products.vue')
     },
+    {
+      path: '/customers',
+      name: 'customers',
+      component: () => import('./views/Customers.vue')
+    },
   ],
   scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {

@@ -35,4 +35,13 @@ Route::prefix('/products')->group(function () {
     Route::post('/add', 'App\Http\Controllers\ProductsController@add');
     Route::post('/destroy/{id}', 'App\Http\Controllers\ProductsController@destroy');
     Route::patch('/update/{product}', 'App\Http\Controllers\ProductsController@update');
+    Route::post('/upload/{id}', 'App\Http\Controllers\ProductsController@upload');
+});
+
+Route::prefix('/customers')->group(function () {
+    Route::get('', 'App\Http\Controllers\CustomersController@index');
+    Route::get('{id}', 'App\Http\Controllers\CustomersController@show');
+    Route::post('/add', 'App\Http\Controllers\CustomersController@add');
+    Route::post('/destroy/{id}', 'App\Http\Controllers\CustomersController@destroy');
+    Route::patch('/update/{customer}', 'App\Http\Controllers\CustomersController@update');
 });

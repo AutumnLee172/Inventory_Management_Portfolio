@@ -75,12 +75,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Products",
   props: {
     id: {
       "default": null
+    },
+    base_url: {
+      "default": window.location.origin
     }
   },
   computed: {
@@ -92,12 +119,11 @@ __webpack_require__.r(__webpack_exports__);
     return {
       form: this.getClearFormObject(),
       items: [],
+      file: null,
+      displayimage: null,
       perPage: 10,
       currentPage: 1,
       fields: [{
-        key: 'id',
-        sortable: true
-      }, {
         key: 'item_number',
         sortable: true
       }, {
@@ -163,7 +189,8 @@ __webpack_require__.r(__webpack_exports__);
         description: null,
         quantity: null,
         original_price: null,
-        selling_price: null
+        selling_price: null,
+        file: null
       };
     },
     submit: function submit() {
@@ -171,6 +198,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var method = 'post';
       var url = '/products/add';
+      console.log(this.form);
 
       if (this.id) {
         method = 'patch';
@@ -227,6 +255,33 @@ __webpack_require__.r(__webpack_exports__);
     clear: function clear() {
       this.id = null;
       this.form = this.getClearFormObject();
+    },
+    onChange: function onChange(e) {
+      this.file = e.target.file[0];
+    },
+    upload: function upload(file) {
+      var _this5 = this;
+
+      var formData = new FormData();
+      formData.append('file', this.file);
+      var config = {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post("/products/upload/".concat(this.id), formData, config).then(function (r) {
+        _this5.$swal('Successfully uploaded');
+
+        _this5.$bvModal.hide("modal-2");
+
+        _this5.getData();
+      })["catch"](function (err) {
+        _this5.$swal('An error has ocured' + err);
+
+        _this5.$bvModal.hide("modal-2");
+
+        _this5.getData();
+      });
     }
   },
   watch: {
@@ -236,6 +291,9 @@ __webpack_require__.r(__webpack_exports__);
       if (newValue) {
         this.getEditData();
       }
+    },
+    file: function file(newValue) {
+      if (newValue) {}
     }
   }
 });
@@ -378,6 +436,31 @@ var render = function () {
                         directives: [
                           {
                             name: "b-modal",
+                            rawName: "v-b-modal.modal-2",
+                            modifiers: { "modal-2": true },
+                          },
+                        ],
+                        attrs: { variant: "primary" },
+                        on: {
+                          click: function ($event) {
+                            _vm.id = row.item.id
+                          },
+                        },
+                      },
+                      [
+                        _c("b-icon", {
+                          attrs: { icon: "image", "font-scale": "1" },
+                        }),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "b-button",
+                      {
+                        directives: [
+                          {
+                            name: "b-modal",
                             rawName: "v-b-modal.modal-1",
                             modifiers: { "modal-1": true },
                           },
@@ -413,6 +496,32 @@ var render = function () {
                         }),
                       ],
                       1
+                    ),
+                  ]
+                },
+              },
+              {
+                key: "cell(item_number)",
+                fn: function (row) {
+                  return [
+                    _c("b-img", {
+                      directives: [
+                        {
+                          name: "b-modal",
+                          rawName: "v-b-modal.modal-3",
+                          modifiers: { "modal-3": true },
+                        },
+                      ],
+                      staticClass: "avatar avatar-sm me-3",
+                      attrs: { src: "/images/" + row.item.image, alt: "user1" },
+                      on: {
+                        click: function ($event) {
+                          _vm.displayimage = row.item.image
+                        },
+                      },
+                    }),
+                    _vm._v(
+                      " " + _vm._s(row.item.item_number) + "\n            "
                     ),
                   ]
                 },
@@ -484,6 +593,7 @@ var render = function () {
                       type: "text",
                       id: "item_number",
                       name: "item_number",
+                      required: "",
                     },
                     model: {
                       value: _vm.form.item_number,
@@ -511,6 +621,7 @@ var render = function () {
                       type: "text",
                       id: "description",
                       name: "description",
+                      required: "",
                     },
                     model: {
                       value: _vm.form.description,
@@ -534,7 +645,12 @@ var render = function () {
                 },
                 [
                   _c("b-form-input", {
-                    attrs: { type: "text", id: "quantity", name: "quantity" },
+                    attrs: {
+                      type: "text",
+                      id: "quantity",
+                      name: "quantity",
+                      required: "",
+                    },
                     model: {
                       value: _vm.form.quantity,
                       callback: function ($$v) {
@@ -561,6 +677,7 @@ var render = function () {
                       type: "text",
                       id: "original_price",
                       name: "original_price",
+                      required: "",
                     },
                     model: {
                       value: _vm.form.original_price,
@@ -588,6 +705,7 @@ var render = function () {
                       type: "text",
                       id: "selling_price",
                       name: "selling_price",
+                      required: "",
                     },
                     model: {
                       value: _vm.form.selling_price,
@@ -618,6 +736,95 @@ var render = function () {
             1
           ),
         ]
+      ),
+      _vm._v(" "),
+      _c(
+        "b-modal",
+        {
+          attrs: {
+            id: "modal-2",
+            title: "Upload Image",
+            "hide-footer": "",
+            size: "lg",
+          },
+        },
+        [
+          _c(
+            "form",
+            {
+              attrs: { enctype: "multipart/form-data" },
+              on: {
+                submit: function ($event) {
+                  $event.preventDefault()
+                  return _vm.upload.apply(null, arguments)
+                },
+              },
+            },
+            [
+              _c("b-form-input", {
+                staticClass: "sr-only",
+                attrs: { id: "id", value: _vm.id, type: "text", readonly: "" },
+                model: {
+                  value: _vm.form.id,
+                  callback: function ($$v) {
+                    _vm.$set(_vm.form, "id", $$v)
+                  },
+                  expression: "form.id",
+                },
+              }),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                { attrs: { label: "Image  ", "label-cols-sm": "2" } },
+                [
+                  _c("b-form-file", {
+                    attrs: {
+                      id: "image",
+                      name: "image",
+                      placeholder: "Choose a file or drop it here...",
+                    },
+                    model: {
+                      value: _vm.file,
+                      callback: function ($$v) {
+                        _vm.file = $$v
+                      },
+                      expression: "file",
+                    },
+                  }),
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-button",
+                {
+                  attrs: {
+                    type: "is-primary",
+                    "native-type": "submit",
+                    variant: "primary",
+                  },
+                },
+                [_vm._v("Submit")]
+              ),
+            ],
+            1
+          ),
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "b-modal",
+        { attrs: { id: "modal-3", "hide-footer": "", size: "lg" } },
+        [
+          _c("b-img", {
+            attrs: {
+              src: "/images/" + _vm.displayimage,
+              fluid: "",
+              alt: "No image available",
+            },
+          }),
+        ],
+        1
       ),
     ],
     1

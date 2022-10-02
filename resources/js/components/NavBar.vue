@@ -33,16 +33,16 @@
             <span class="nav-link-text ms-1">Products</span>
           </router-link>
         </li>
-
         <li class="nav-item">
-          <a class="nav-link " href="../pages/tables.html">
+          <router-link to="/customers" class="nav-link" active-class="active" exact>
             <div
               class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
+              <b-icon class="ni ni-tv-2 text-info text-sm opacity-10" icon="people"></b-icon>
             </div>
-            <span class="nav-link-text ms-1">Tables</span>
-          </a>
+            <span class="nav-link-text ms-1">Customers</span>
+          </router-link>
         </li>
+
         <li class="nav-item">
           <a class="nav-link " href="../pages/billing.html">
             <div
