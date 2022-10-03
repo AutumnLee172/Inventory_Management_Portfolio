@@ -29,6 +29,16 @@ class ProductsController extends Controller
         ]);
     }
 
+    public function find($item_number)
+    {
+        $product = Product::where('item_number', $item_number)->first();
+
+        return response()->json([
+            'data' => $product
+        ]);
+    }
+
+
     public function add(Request $request)
     {
         $products = new Product;

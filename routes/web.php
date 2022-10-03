@@ -32,6 +32,7 @@ Route::prefix('/profile')->group(function () {
 Route::prefix('/products')->group(function () {
     Route::get('', 'App\Http\Controllers\ProductsController@index');
     Route::get('{id}', 'App\Http\Controllers\ProductsController@show');
+    Route::get('/find/{item_number}', 'App\Http\Controllers\ProductsController@find');
     Route::post('/add', 'App\Http\Controllers\ProductsController@add');
     Route::post('/destroy/{id}', 'App\Http\Controllers\ProductsController@destroy');
     Route::patch('/update/{product}', 'App\Http\Controllers\ProductsController@update');
