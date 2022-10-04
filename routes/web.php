@@ -46,3 +46,7 @@ Route::prefix('/customers')->group(function () {
     Route::post('/destroy/{id}', 'App\Http\Controllers\CustomersController@destroy');
     Route::patch('/update/{customer}', 'App\Http\Controllers\CustomersController@update');
 });
+
+Route::prefix('/invoices')->group(function () {
+    Route::post('new', 'App\Http\Controllers\InvoicesController@create');
+});

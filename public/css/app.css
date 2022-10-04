@@ -27114,3 +27114,7 @@ pre[class*=language-] {
   width: 80%;
   margin-left: 15%;
 }
+
+.small-font{
+  font-size: 0.6rem;
+}
