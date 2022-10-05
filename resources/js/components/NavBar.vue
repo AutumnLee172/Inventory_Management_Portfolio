@@ -61,15 +61,6 @@
             <span class="nav-link-text ms-1">Virtual Reality</span>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link " href="../pages/rtl.html">
-            <div
-              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-world-2 text-danger text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">RTL</span>
-          </a>
-        </li>
         <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Transaction</h6>
         </li>
@@ -80,6 +71,15 @@
               <b-icon class="ni ni-tv-2 text-danger text-sm opacity-10" icon="receipt-cutoff"></b-icon>
             </div>
             <span class="nav-link-text ms-1">Invoices</span>
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/sales" class="nav-link" active-class="active" exact>
+            <div
+              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <b-icon class="ni ni-tv-2 text-danger text-sm opacity-10" icon="receipt-cutoff"></b-icon>
+            </div>
+            <span class="nav-link-text ms-1">Sales Order</span>
           </router-link>
         </li>
         <li class="nav-item">

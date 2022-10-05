@@ -25,7 +25,9 @@ class CreateInvoicesTable extends Migration
             $table->float('net');
             $table->float('deposit');
             $table->float('balance');
+            $table->float('tax')->nullable();
             $table->string('transaction_id');
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

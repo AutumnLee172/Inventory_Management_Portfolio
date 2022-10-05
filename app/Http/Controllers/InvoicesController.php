@@ -31,6 +31,7 @@ class InvoicesController extends Controller
         $invoice->net = ($request->has('net') && !empty($request->get('net'))) ? $request->get('net') : 0;
         $invoice->deposit = ($request->has('deposit') && !empty($request->get('deposit'))) ? $request->get('deposit') : 0;
         $invoice->balance = ($request->has('balance') && !empty($request->get('balance'))) ? $request->get('balance') : 0;
+        $invoice->status = "Pending";
         $invoice->transaction_id = $uuid;
 
             if($invoice->save()){

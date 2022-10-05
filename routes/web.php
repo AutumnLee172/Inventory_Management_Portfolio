@@ -50,3 +50,8 @@ Route::prefix('/customers')->group(function () {
 Route::prefix('/invoices')->group(function () {
     Route::post('new', 'App\Http\Controllers\InvoicesController@create');
 });
+
+Route::prefix('/sales')->group(function () {
+    Route::post('new', 'App\Http\Controllers\SalesController@create');
+    Route::get('', 'App\Http\Controllers\SalesController@index');
+});

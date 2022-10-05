@@ -37,6 +37,17 @@ export default new Router({
       name: 'invoices.new',
       component: () => import('./views/Invoices/Invoice_Form.vue')
     },
+    {
+      path: '/Sales',
+      name: 'sales',
+      component: () => import('./views/Sales/Sales.vue')
+    },
+    
+    {
+      path: '/Sales/new',
+      name: 'sales.new',
+      component: () => import('./views/Sales/Sale_Form.vue')
+    },
   ],
   scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {
