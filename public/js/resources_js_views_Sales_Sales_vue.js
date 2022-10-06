@@ -60,7 +60,6 @@ __webpack_require__.r(__webpack_exports__);
     return {
       //form: this.getClearFormObject(),
       items: [],
-      file: null,
       displayimage: null,
       perPage: 10,
       currentPage: 1,
@@ -242,9 +241,6 @@ __webpack_require__.r(__webpack_exports__);
       if (newValue) {
         this.getEditData();
       }
-    },
-    file: function file(newValue) {
-      if (newValue) {}
     }
   }
 });

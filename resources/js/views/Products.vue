@@ -5,8 +5,9 @@
             <div class="card-header">
                 <h2>Products table</h2>
             </div>
-            <b-table class="table align-items-center mb-0" id="merchant-table" :fields="fields" head-variant="light"
-                :items="items" sort-by="id" responsive="sm" :per-page="perPage" :current-page="currentPage">
+            <b-table :busy="isBusy" class="table align-items-center mb-0" id="merchant-table" :fields="fields"
+                head-variant="light" :items="items" sort-by="id" responsive="sm" :per-page="perPage"
+                :current-page="currentPage">
                 <template #cell(Edit)="row">
                     <b-button variant="primary" v-b-modal.modal-2 @click="id=row.item.id">
                         <b-icon icon="image" font-scale="1"></b-icon>
@@ -19,7 +20,13 @@
                     </b-button>
                 </template>
                 <template #cell(item_number)="row">
-                   <b-img @click="displayimage=row.item.image" v-b-modal.modal-3 :src="'/images/' + row.item.image" class="avatar avatar-sm me-3" alt="user1"/> {{ row.item.item_number }}
+                    <b-img @click="displayimage=row.item.image" v-b-modal.modal-3 :src="'/images/' + row.item.image"
+                        class="avatar avatar-sm me-3" alt="user1" /> {{ row.item.item_number }}
+                </template>
+                <template #table-busy>
+                    <div class="text-center text-danger my-2">
+                        <b-spinner variant="primary" class="align-middle"></b-spinner>
+                    </div>
                 </template>
             </b-table>
         </div>
@@ -105,7 +112,7 @@ export default {
     },
     data() {
         return {
-
+            isBusy: false,
             form: this.getClearFormObject(),
             items: [],
             file: null,
@@ -127,15 +134,17 @@ export default {
     },
     methods: {
         getData() {
+            this.isBusy = true
             axios
                 .get(`/products`)
                 .then((r) => {
                     if (r.data && r.data.data) {
+                        this.isBusy = false
                         this.items = r.data.data;
                     }
                 })
                 .catch((err) => {
-                    // this.isLoading = false;
+                    this.isBusy = false
                     this.$bvToast.toast(err, {
                         title: 'Error',
                         autoHideDelay: 5000
@@ -229,26 +238,26 @@ export default {
             this.id = null
             this.form = this.getClearFormObject()
         },
-        onChange(e){
+        onChange(e) {
             this.file = e.target.file[0];
         },
         upload(file) {
             let formData = new FormData()
             formData.append('file', this.file)
             const config = {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
+                headers: {
+                    'content-type': 'multipart/form-data'
                 }
+            }
             axios.post(`/products/upload/${this.id}`, formData, config).then(r => {
                 this.$swal('Successfully uploaded');
                 this.$bvModal.hide("modal-2");
                 this.getData();
             }).catch(err => {
-                    this.$swal('An error has ocured' + err);
-                    this.$bvModal.hide("modal-2");
-                    this.getData();
-                })
+                this.$swal('An error has ocured' + err);
+                this.$bvModal.hide("modal-2");
+                this.getData();
+            })
         }
     },
     watch: {
@@ -258,9 +267,9 @@ export default {
                 this.getEditData()
             }
         },
-        file(newValue){
+        file(newValue) {
             if (newValue) {
-              
+
             }
         }
     }

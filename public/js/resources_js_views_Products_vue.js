@@ -99,6 +99,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Products",
@@ -117,6 +124,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      isBusy: false,
       form: this.getClearFormObject(),
       items: [],
       file: null,
@@ -151,12 +159,15 @@ __webpack_require__.r(__webpack_exports__);
     getData: function getData() {
       var _this = this;
 
+      this.isBusy = true;
       axios__WEBPACK_IMPORTED_MODULE_0___default().get("/products").then(function (r) {
         if (r.data && r.data.data) {
+          _this.isBusy = false;
           _this.items = r.data.data;
         }
       })["catch"](function (err) {
-        // this.isLoading = false;
+        _this.isBusy = false;
+
         _this.$bvToast.toast(err, {
           title: 'Error',
           autoHideDelay: 5000
@@ -416,6 +427,7 @@ var render = function () {
           _c("b-table", {
             staticClass: "table align-items-center mb-0",
             attrs: {
+              busy: _vm.isBusy,
               id: "merchant-table",
               fields: _vm.fields,
               "head-variant": "light",
@@ -525,6 +537,25 @@ var render = function () {
                     ),
                   ]
                 },
+              },
+              {
+                key: "table-busy",
+                fn: function () {
+                  return [
+                    _c(
+                      "div",
+                      { staticClass: "text-center text-danger my-2" },
+                      [
+                        _c("b-spinner", {
+                          staticClass: "align-middle",
+                          attrs: { variant: "primary" },
+                        }),
+                      ],
+                      1
+                    ),
+                  ]
+                },
+                proxy: true,
               },
             ]),
           }),
