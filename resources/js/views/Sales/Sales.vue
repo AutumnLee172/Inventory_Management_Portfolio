@@ -9,6 +9,9 @@
             <b-table class="table align-items-center mb-0" id="sales-table" :fields="fields" head-variant="light"
                 :items="items" sort-by="id" sort-desc="true" responsive="sm" :per-page="perPage" :current-page="currentPage">
                 <template #cell(Edit)="row">
+                    <b-button variant="info" @click="generatePDF(row.item.id)">
+                        <b-icon icon="file-earmark-arrow-down" font-scale="1"></b-icon>
+                    </b-button>
                     <b-button variant="primary" v-b-modal.modal-1 @click="id=row.item.id">
                         <b-icon icon="pencil-square" font-scale="1"></b-icon>
                     </b-button>
@@ -45,7 +48,6 @@ export default {
         return {
             //form: this.getClearFormObject(),
             items: [],
-            file: null,
             displayimage: null,
             perPage: 10,
             currentPage: 1,
@@ -55,7 +57,7 @@ export default {
                 { key: 'total', sortable: true },
                 { key: 'deposit', sortable: true },
                 { key: 'transaction_id', sortable: true },                
-                { key: 'created_at', sortable: true },
+                { key: 'created_date', sortable: true },
                 { key: 'status', sortable: true },
                 { key: 'Edit', sortable: false }
             ]
@@ -156,7 +158,7 @@ export default {
                 confirmButtonText: 'Confirm',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.post(`/products/destroy/${this.id}`).then(r => {
+                    axios.post(`/sales/destroy/${this.id}`).then(r => {
                         this.$swal('Successfully deleted');
                         this.getData();
 
@@ -191,6 +193,9 @@ export default {
                     this.$bvModal.hide("modal-2");
                     this.getData();
                 })
+        },
+        generatePDF($id){
+            window.location.href = `/sales/createPDF/${$id}`
         }
     },
     watch: {
@@ -200,11 +205,6 @@ export default {
                 this.getEditData()
             }
         },
-        file(newValue){
-            if (newValue) {
-              
-            }
-        }
     }
 }
 

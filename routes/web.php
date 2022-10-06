@@ -54,4 +54,6 @@ Route::prefix('/invoices')->group(function () {
 Route::prefix('/sales')->group(function () {
     Route::post('new', 'App\Http\Controllers\SalesController@create');
     Route::get('', 'App\Http\Controllers\SalesController@index');
+    Route::get('/createPDF/{id}', 'App\Http\Controllers\SalesController@createPDF');
+    Route::post('/destroy/{id}', 'App\Http\Controllers\SalesController@destroy');
 });

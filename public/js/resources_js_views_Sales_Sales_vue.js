@@ -40,6 +40,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Sales",
@@ -77,7 +80,7 @@ __webpack_require__.r(__webpack_exports__);
         key: 'transaction_id',
         sortable: true
       }, {
-        key: 'created_at',
+        key: 'created_date',
         sortable: true
       }, {
         key: 'status',
@@ -185,7 +188,7 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: 'Confirm'
       }).then(function (result) {
         if (result.isConfirmed) {
-          axios__WEBPACK_IMPORTED_MODULE_0___default().post("/products/destroy/".concat(_this4.id)).then(function (r) {
+          axios__WEBPACK_IMPORTED_MODULE_0___default().post("/sales/destroy/".concat(_this4.id)).then(function (r) {
             _this4.$swal('Successfully deleted');
 
             _this4.getData();
@@ -227,6 +230,9 @@ __webpack_require__.r(__webpack_exports__);
 
         _this5.getData();
       });
+    },
+    generatePDF: function generatePDF($id) {
+      window.location.href = "/sales/createPDF/".concat($id);
     }
   },
   watch: {
@@ -364,6 +370,27 @@ var render = function () {
                 key: "cell(Edit)",
                 fn: function (row) {
                   return [
+                    _c(
+                      "b-button",
+                      {
+                        attrs: { variant: "info" },
+                        on: {
+                          click: function ($event) {
+                            return _vm.generatePDF(row.item.id)
+                          },
+                        },
+                      },
+                      [
+                        _c("b-icon", {
+                          attrs: {
+                            icon: "file-earmark-arrow-down",
+                            "font-scale": "1",
+                          },
+                        }),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
                     _c(
                       "b-button",
                       {

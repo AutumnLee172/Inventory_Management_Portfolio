@@ -28,6 +28,7 @@ class CreateInvoicesTable extends Migration
             $table->float('tax')->nullable();
             $table->string('transaction_id');
             $table->string('status')->nullable();
+            $table->string('created_date')->nullable();
             $table->timestamps();
         });
     }

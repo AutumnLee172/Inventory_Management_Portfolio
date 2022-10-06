@@ -7,7 +7,9 @@ use App\Models\Content;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use PDF;
 use DB;
+use DateTime;
 
 class SalesController extends Controller
 {
@@ -45,6 +47,7 @@ class SalesController extends Controller
         $sale->net = ($request->has('net') && !empty($request->get('net'))) ? $request->get('net') : 0;
         $sale->deposit = ($request->has('deposit') && !empty($request->get('deposit'))) ? $request->get('deposit') : 0;
         $sale->balance = ($request->has('balance') && !empty($request->get('balance'))) ? $request->get('balance') : 0;
+        $sale->created_date = new DateTime();
         $sale->status = "Pending";
         $sale->transaction_id = $uuid;
 
@@ -82,5 +85,26 @@ class SalesController extends Controller
         ]);
 
 
+    }
+
+    public function destroy($id){
+        $sale = Sale::find($id);
+        Content::where('transaction_id',$sale->transaction_id)->delete();
+        $sale->delete();
+
+        return response()->json([
+            'status' => 'true'
+        ]);
+
+    }
+
+    public function createPDF($id){
+        $sale = Sale::find($id);
+        // $sales[] = $sale->toArray();
+        $content = Content::where('transaction_id',$sale->transaction_id)->get();
+
+
+        $pdf = PDF::loadView('report_pdf', ['data' => $sale, 'items' => $content])->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->download('report.pdf');
     }
 }
