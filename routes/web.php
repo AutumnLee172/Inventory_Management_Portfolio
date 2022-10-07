@@ -48,12 +48,18 @@ Route::prefix('/customers')->group(function () {
 });
 
 Route::prefix('/invoices')->group(function () {
-    Route::post('new', 'App\Http\Controllers\InvoicesController@create');
+    //Route::post('new', 'App\Http\Controllers\InvoicesController@create');
+    Route::post('complete/{id}', 'App\Http\Controllers\InvoicesController@complete');
+    Route::get('', 'App\Http\Controllers\InvoicesController@index');
+    Route::get('/createPDF/{id}', 'App\Http\Controllers\InvoicesController@createPDF');
 });
 
 Route::prefix('/sales')->group(function () {
     Route::post('new', 'App\Http\Controllers\SalesController@create');
+    Route::post('/edit/{id}', 'App\Http\Controllers\SalesController@update');
+    Route::get('/toinvoice/{id}', 'App\Http\Controllers\SalesController@toinvoice');
     Route::get('', 'App\Http\Controllers\SalesController@index');
     Route::get('/createPDF/{id}', 'App\Http\Controllers\SalesController@createPDF');
     Route::post('/destroy/{id}', 'App\Http\Controllers\SalesController@destroy');
+    Route::get('/get/{id}', 'App\Http\Controllers\SalesController@getSale');
 });

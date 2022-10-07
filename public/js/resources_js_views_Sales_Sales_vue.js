@@ -43,6 +43,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Sales",
@@ -178,7 +192,7 @@ __webpack_require__.r(__webpack_exports__);
         _this3.getData();
       });
     },
-    destroy: function destroy() {
+    destroy: function destroy($id) {
       var _this4 = this;
 
       this.$swal.fire({
@@ -187,7 +201,7 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: 'Confirm'
       }).then(function (result) {
         if (result.isConfirmed) {
-          axios__WEBPACK_IMPORTED_MODULE_0___default().post("/sales/destroy/".concat(_this4.id)).then(function (r) {
+          axios__WEBPACK_IMPORTED_MODULE_0___default().post("/sales/destroy/".concat($id)).then(function (r) {
             _this4.$swal('Successfully deleted');
 
             _this4.getData();
@@ -206,32 +220,29 @@ __webpack_require__.r(__webpack_exports__);
     onChange: function onChange(e) {
       this.file = e.target.file[0];
     },
-    upload: function upload(file) {
-      var _this5 = this;
-
-      var formData = new FormData();
-      formData.append('file', this.file);
-      var config = {
-        headers: {
-          'content-type': 'multipart/form-data'
-        }
-      };
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post("/products/upload/".concat(this.id), formData, config).then(function (r) {
-        _this5.$swal('Successfully uploaded');
-
-        _this5.$bvModal.hide("modal-2");
-
-        _this5.getData();
-      })["catch"](function (err) {
-        _this5.$swal('An error has ocured' + err);
-
-        _this5.$bvModal.hide("modal-2");
-
-        _this5.getData();
-      });
-    },
     generatePDF: function generatePDF($id) {
       window.location.href = "/sales/createPDF/".concat($id);
+    },
+    convertInvoice: function convertInvoice($id) {
+      var _this5 = this;
+
+      this.$swal.fire({
+        title: 'Are you sure to invoice this sales order?',
+        showCancelButton: true,
+        confirmButtonText: 'Confirm'
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          axios__WEBPACK_IMPORTED_MODULE_0___default().get("/sales/toinvoice/".concat($id)).then(function (r) {
+            _this5.$swal('Successfully invoiced');
+
+            _this5.getData();
+          })["catch"](function (e) {
+            _this5.$swal('An error has ocured' + e);
+
+            _this5.getData();
+          });
+        }
+      });
     }
   },
   watch: {
@@ -356,7 +367,7 @@ var render = function () {
               "head-variant": "light",
               items: _vm.items,
               "sort-by": "id",
-              "sort-desc": "true",
+              "sort-desc": true,
               responsive: "sm",
               "per-page": _vm.perPage,
               "current-page": _vm.currentPage,
@@ -366,6 +377,52 @@ var render = function () {
                 key: "cell(Edit)",
                 fn: function (row) {
                   return [
+                    row.item.status == "Pending"
+                      ? _c(
+                          "b-button",
+                          {
+                            attrs: { variant: "success" },
+                            on: {
+                              click: function ($event) {
+                                return _vm.convertInvoice(row.item.id)
+                              },
+                            },
+                          },
+                          [
+                            _c("b-icon", {
+                              attrs: {
+                                icon: "check2-circle",
+                                "font-scale": "1",
+                              },
+                            }),
+                          ],
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    row.item.status == "Invoiced"
+                      ? _c(
+                          "b-button",
+                          {
+                            attrs: { variant: "success", disabled: "" },
+                            on: {
+                              click: function ($event) {
+                                return _vm.convertInvoice(row.item.id)
+                              },
+                            },
+                          },
+                          [
+                            _c("b-icon", {
+                              attrs: {
+                                icon: "check2-circle",
+                                "font-scale": "1",
+                              },
+                            }),
+                          ],
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
                     _c(
                       "b-button",
                       {
@@ -387,48 +444,91 @@ var render = function () {
                       1
                     ),
                     _vm._v(" "),
-                    _c(
-                      "b-button",
-                      {
-                        directives: [
+                    row.item.status == "Pending"
+                      ? _c(
+                          "router-link",
                           {
-                            name: "b-modal",
-                            rawName: "v-b-modal.modal-1",
-                            modifiers: { "modal-1": true },
+                            attrs: {
+                              to: {
+                                name: "sales.edit",
+                                params: { id: row.item.id },
+                              },
+                            },
                           },
-                        ],
-                        attrs: { variant: "primary" },
-                        on: {
-                          click: function ($event) {
-                            _vm.id = row.item.id
-                          },
-                        },
-                      },
-                      [
-                        _c("b-icon", {
-                          attrs: { icon: "pencil-square", "font-scale": "1" },
-                        }),
-                      ],
-                      1
-                    ),
+                          [
+                            _c(
+                              "b-button",
+                              { attrs: { variant: "primary" } },
+                              [
+                                _c("b-icon", {
+                                  attrs: {
+                                    icon: "pencil-square",
+                                    "font-scale": "1",
+                                  },
+                                }),
+                              ],
+                              1
+                            ),
+                          ],
+                          1
+                        )
+                      : _vm._e(),
                     _vm._v(" "),
-                    _c(
-                      "b-button",
-                      {
-                        attrs: { variant: "danger" },
-                        on: {
-                          click: function ($event) {
-                            return _vm.destroy((_vm.id = row.item.id))
+                    row.item.status == "Invoiced"
+                      ? _c(
+                          "b-button",
+                          { attrs: { variant: "primary", disabled: "" } },
+                          [
+                            _c("b-icon", {
+                              attrs: {
+                                icon: "pencil-square",
+                                "font-scale": "1",
+                              },
+                            }),
+                          ],
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    row.item.status == "Pending"
+                      ? _c(
+                          "b-button",
+                          {
+                            attrs: { variant: "danger" },
+                            on: {
+                              click: function ($event) {
+                                return _vm.destroy((_vm.id = row.item.id))
+                              },
+                            },
                           },
-                        },
-                      },
-                      [
-                        _c("b-icon", {
-                          attrs: { icon: "trash", "font-scale": "1" },
-                        }),
-                      ],
-                      1
-                    ),
+                          [
+                            _c("b-icon", {
+                              attrs: { icon: "trash", "font-scale": "1" },
+                            }),
+                          ],
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    row.item.status == "Invoiced"
+                      ? _c(
+                          "b-button",
+                          {
+                            attrs: { variant: "danger", disabled: "" },
+                            on: {
+                              click: function ($event) {
+                                return _vm.destroy((_vm.id = row.item.id))
+                              },
+                            },
+                          },
+                          [
+                            _c("b-icon", {
+                              attrs: { icon: "trash", "font-scale": "1" },
+                            }),
+                          ],
+                          1
+                        )
+                      : _vm._e(),
                   ]
                 },
               },

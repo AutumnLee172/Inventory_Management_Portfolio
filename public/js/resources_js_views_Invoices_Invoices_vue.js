@@ -43,9 +43,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Invoices",
@@ -68,19 +65,25 @@ __webpack_require__.r(__webpack_exports__);
       perPage: 10,
       currentPage: 1,
       fields: [{
-        key: 'item_number',
+        key: 'id',
         sortable: true
       }, {
-        key: 'description',
+        key: 'customer_name',
         sortable: true
       }, {
-        key: 'quantity',
+        key: 'total',
         sortable: true
       }, {
-        key: 'original_price',
+        key: 'balance',
         sortable: true
       }, {
-        key: 'selling_price',
+        key: 'transaction_id',
+        sortable: true
+      }, {
+        key: 'created_date',
+        sortable: true
+      }, {
+        key: 'status',
         sortable: true
       }, {
         key: 'Edit',
@@ -88,13 +91,14 @@ __webpack_require__.r(__webpack_exports__);
       }]
     };
   },
-  created: function created() {//this.getData();
+  created: function created() {
+    this.getData();
   },
   methods: {
     getData: function getData() {
       var _this = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get("/products").then(function (r) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('/invoices').then(function (r) {
         if (r.data && r.data.data) {
           _this.items = r.data.data;
         }
@@ -106,125 +110,28 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
-    editForm: function editForm() {},
-    getEditData: function getEditData() {
+    generatePDF: function generatePDF($id) {
+      window.location.href = "/invoices/createPDF/".concat($id);
+    },
+    complete: function complete($id) {
       var _this2 = this;
 
-      // this.isLoading = true;
-      if (this.id) {
-        axios__WEBPACK_IMPORTED_MODULE_0___default().get("/products/".concat(this.id)).then(function (r) {
-          // this.isLoading = false;
-          if (r.data && r.data.data) {
-            _this2.form = r.data.data;
-          }
-        })["catch"](function (err) {
-          // this.isLoading = false;
-          _this2.$bvToast.toast(err, {
-            title: 'Error',
-            autoHideDelay: 5000
-          });
-        });
-      }
-    },
-    getClearFormObject: function getClearFormObject() {
-      return {
-        id: null,
-        item_number: null,
-        description: null,
-        quantity: null,
-        original_price: null,
-        selling_price: null,
-        file: null
-      };
-    },
-    submit: function submit() {
-      var _this3 = this;
-
-      var method = 'post';
-      var url = '/products/add';
-      console.log(this.form);
-
-      if (this.id) {
-        method = 'patch';
-        url = "/products/update/".concat(this.id);
-      }
-
-      axios__WEBPACK_IMPORTED_MODULE_0___default()({
-        method: method,
-        url: url,
-        data: this.form
-      }).then(function (r) {
-        if (!_this3.id && r.data.data.id) {
-          _this3.$swal('Successfully Created');
-
-          _this3.$bvModal.hide("modal-1");
-
-          _this3.getData();
-        } else {
-          _this3.$swal('Successfully updated');
-
-          _this3.$bvModal.hide("modal-1");
-
-          _this3.getData();
-        }
-      })["catch"](function (e) {
-        _this3.$swal('An error has ocured' + e);
-
-        _this3.$bvModal.hide("modal-1");
-
-        _this3.getData();
-      });
-    },
-    destroy: function destroy() {
-      var _this4 = this;
-
       this.$swal.fire({
-        title: 'Are you sure to delete this?',
+        title: 'Are you sure to complete this?',
         showCancelButton: true,
         confirmButtonText: 'Confirm'
       }).then(function (result) {
         if (result.isConfirmed) {
-          axios__WEBPACK_IMPORTED_MODULE_0___default().post("/products/destroy/".concat(_this4.id)).then(function (r) {
-            _this4.$swal('Successfully deleted');
+          axios__WEBPACK_IMPORTED_MODULE_0___default().post("/invoices/complete/".concat($id)).then(function (r) {
+            _this2.$swal('Order is completed');
 
-            _this4.getData();
+            _this2.getData();
           })["catch"](function (e) {
-            _this4.$swal('An error has ocured' + e);
+            _this2.$swal('An error has ocured' + e);
 
-            _this4.getData();
+            _this2.getData();
           });
         }
-      });
-    },
-    clear: function clear() {
-      this.id = null;
-      this.form = this.getClearFormObject();
-    },
-    onChange: function onChange(e) {
-      this.file = e.target.file[0];
-    },
-    upload: function upload(file) {
-      var _this5 = this;
-
-      var formData = new FormData();
-      formData.append('file', this.file);
-      var config = {
-        headers: {
-          'content-type': 'multipart/form-data'
-        }
-      };
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post("/products/upload/".concat(this.id), formData, config).then(function (r) {
-        _this5.$swal('Successfully uploaded');
-
-        _this5.$bvModal.hide("modal-2");
-
-        _this5.getData();
-      })["catch"](function (err) {
-        _this5.$swal('An error has ocured' + err);
-
-        _this5.$bvModal.hide("modal-2");
-
-        _this5.getData();
       });
     }
   },
@@ -333,13 +240,111 @@ var render = function () {
     { staticClass: "container-fluid py-4 px-4" },
     [
       _c(
-        "router-link",
-        { attrs: { to: "/invoices/new" } },
-        [_c("b-button", [_vm._v("Add new")])],
+        "div",
+        { staticClass: "card mb-4" },
+        [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("b-table", {
+            staticClass: "table align-items-center mb-0",
+            attrs: {
+              id: "sales-table",
+              fields: _vm.fields,
+              "head-variant": "light",
+              items: _vm.items,
+              "sort-by": "id",
+              "sort-desc": true,
+              responsive: "sm",
+              "per-page": _vm.perPage,
+              "current-page": _vm.currentPage,
+            },
+            scopedSlots: _vm._u([
+              {
+                key: "cell(Edit)",
+                fn: function (row) {
+                  return [
+                    row.item.status == "Pending"
+                      ? _c(
+                          "b-button",
+                          {
+                            attrs: { variant: "success" },
+                            on: {
+                              click: function ($event) {
+                                return _vm.complete(row.item.id)
+                              },
+                            },
+                          },
+                          [
+                            _c("b-icon", {
+                              attrs: {
+                                icon: "check2-circle",
+                                "font-scale": "1",
+                              },
+                            }),
+                          ],
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    row.item.status == "Completed"
+                      ? _c(
+                          "b-button",
+                          { attrs: { variant: "success", disabled: "" } },
+                          [
+                            _c("b-icon", {
+                              attrs: {
+                                icon: "check2-circle",
+                                "font-scale": "1",
+                              },
+                            }),
+                          ],
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "b-button",
+                      {
+                        attrs: { variant: "info" },
+                        on: {
+                          click: function ($event) {
+                            return _vm.generatePDF(row.item.id)
+                          },
+                        },
+                      },
+                      [
+                        _c("b-icon", {
+                          attrs: {
+                            icon: "file-earmark-arrow-down",
+                            "font-scale": "1",
+                          },
+                        }),
+                      ],
+                      1
+                    ),
+                  ]
+                },
+              },
+            ]),
+          }),
+        ],
         1
       ),
       _vm._v(" "),
-      _vm._m(0),
+      _c("b-pagination", {
+        attrs: {
+          "total-rows": _vm.rows,
+          "per-page": _vm.perPage,
+          "aria-controls": "merchant-table",
+        },
+        model: {
+          value: _vm.currentPage,
+          callback: function ($$v) {
+            _vm.currentPage = $$v
+          },
+          expression: "currentPage",
+        },
+      }),
     ],
     1
   )
@@ -349,10 +354,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card mb-4" }, [
-      _c("div", { staticClass: "card-header" }, [
-        _c("h2", [_vm._v("Invoices table")]),
-      ]),
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h2", [_vm._v("Invoices table")]),
     ])
   },
 ]

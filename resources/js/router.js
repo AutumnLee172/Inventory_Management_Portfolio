@@ -42,11 +42,16 @@ export default new Router({
       name: 'sales',
       component: () => import('./views/Sales/Sales.vue')
     },
-    
     {
       path: '/Sales/new',
       name: 'sales.new',
       component: () => import('./views/Sales/Sale_Form.vue')
+    },
+    {
+      path: '/Sales/edit/:id',
+      name: 'sales.edit',
+      component: () => import('./views/Sales/Sale_Form.vue'),
+      props: true
     },
   ],
   scrollBehavior (to, from, savedPosition) {

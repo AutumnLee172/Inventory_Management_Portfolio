@@ -6,6 +6,7 @@ use App\Models\Content;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use PDF;
 use DB;
 
 class InvoicesController extends Controller
@@ -66,7 +67,30 @@ class InvoicesController extends Controller
                 'id' => $invoice->id
             ]
         ]);
+    }
 
+    public function index(){
+        $invoices = Invoice::all();
+        return response()->json([
+            'data' => $invoices
+        ]);
+    }
 
+    public function createPDF($id){
+        $invoice = Invoice::find($id);
+        $content = Content::where('transaction_id',$invoice->transaction_id)->get();
+        $pdf = PDF::loadView('report_pdf', ['data' => $invoice, 'items' => $content])->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->download('invoice.pdf');
+    }
+
+    public function complete($id){
+        $invoice = Invoice::find($id);
+        $invoice->status = "Completed";
+        $invoice->save();
+        return response()->json([
+            'data' => [
+                'id' => $invoice->id
+            ]
+        ]);
     }
 }

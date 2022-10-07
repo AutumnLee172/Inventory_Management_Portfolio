@@ -196,32 +196,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }],
       displayimage: null,
       perPage: 10,
-      currentPage: 1,
-      fields: [{
-        key: 'item_number',
-        sortable: true
-      }, {
-        key: 'description',
-        sortable: true
-      }, {
-        key: 'quantity',
-        sortable: true
-      }, {
-        key: 'original_price',
-        sortable: true
-      }, {
-        key: 'selling_price',
-        sortable: true
-      }, {
-        key: 'Edit',
-        sortable: false
-      }]
+      currentPage: 1
     };
   },
   created: function created() {
     this.fetchCustomer();
     this.fetchProducts();
     this.getClearFormObject();
+
+    if (this.id) {
+      this.getinvoiceData();
+    }
   },
   methods: {
     fetchCustomer: function fetchCustomer() {
@@ -360,12 +345,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.isLoading = true;
       var method = 'post';
       var url = '/sales/new';
+
+      if (this.id) {
+        url = "/sales/edit/".concat(this.id);
+      }
+
       axios__WEBPACK_IMPORTED_MODULE_0___default()({
         method: method,
         url: url,
         data: this.form
       }).then(function (r) {
-        _this5.$swal('Successfully Created');
+        if (!_this5.id && r.data.data.id) {
+          _this5.$swal('Successfully Created');
+        } else {
+          _this5.$swal('Successfully updated');
+        }
 
         _this5.isLoading = false;
 
@@ -374,6 +368,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this5.$swal('An error has ocured' + e);
 
         _this5.isLoading = false;
+      });
+    },
+    getinvoiceData: function getinvoiceData() {
+      var _this6 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get("/sales/get/".concat(this.id)).then(function (r) {
+        if (r.data && r.data.data) {
+          _this6.form = r.data.data;
+          _this6.selectedCustomer = _this6.form.customer_id;
+          _this6.items = r.data.items;
+        }
+      })["catch"](function (err) {
+        // this.isLoading = false;
+        _this6.$bvToast.toast(err, {
+          title: 'Error',
+          autoHideDelay: 5000
+        });
       });
     }
   },
@@ -777,7 +788,7 @@ var render = function () {
                         {
                           staticClass: "small-font",
                           attrs: {
-                            label: "Original Price",
+                            label: "Original $",
                             "label-for": "original_price",
                           },
                         },
@@ -808,7 +819,7 @@ var render = function () {
                         {
                           staticClass: "small-font",
                           attrs: {
-                            label: "Selling Price",
+                            label: "Selling $",
                             "label-for": "selling_price",
                           },
                         },

@@ -7,15 +7,29 @@
                 <h2>Sales Order table</h2>
             </div>
             <b-table class="table align-items-center mb-0" id="sales-table" :fields="fields" head-variant="light"
-                :items="items" sort-by="id" sort-desc="true" responsive="sm" :per-page="perPage" :current-page="currentPage">
+                :items="items" sort-by="id" :sort-desc=true responsive="sm" :per-page="perPage" :current-page="currentPage">
                 <template #cell(Edit)="row">
+                    <b-button variant="success" @click="convertInvoice(row.item.id)" v-if="row.item.status == 'Pending'">
+                        <b-icon icon="check2-circle" font-scale="1"></b-icon>
+                    </b-button>
+                    <b-button variant="success" @click="convertInvoice(row.item.id)" v-if="row.item.status == 'Invoiced'" disabled>
+                        <b-icon icon="check2-circle" font-scale="1"></b-icon>
+                    </b-button>
                     <b-button variant="info" @click="generatePDF(row.item.id)">
                         <b-icon icon="file-earmark-arrow-down" font-scale="1"></b-icon>
                     </b-button>
-                    <b-button variant="primary" v-b-modal.modal-1 @click="id=row.item.id">
+                    <router-link :to="{name:'sales.edit', params: {id: row.item.id}}" v-if="row.item.status == 'Pending'">
+                    <b-button variant="primary">
                         <b-icon icon="pencil-square" font-scale="1"></b-icon>
                     </b-button>
-                    <b-button variant="danger" @click="destroy(id=row.item.id)">
+                    </router-link>
+                    <b-button variant="primary" v-if="row.item.status == 'Invoiced'" disabled>
+                        <b-icon icon="pencil-square" font-scale="1"></b-icon>
+                    </b-button>
+                    <b-button variant="danger" @click="destroy(id=row.item.id)" v-if="row.item.status == 'Pending'">
+                        <b-icon icon="trash" font-scale="1"></b-icon>
+                    </b-button>
+                    <b-button variant="danger" @click="destroy(id=row.item.id)" v-if="row.item.status == 'Invoiced'" disabled>
                         <b-icon icon="trash" font-scale="1"></b-icon>
                     </b-button>
                 </template>
@@ -151,14 +165,14 @@ export default {
             });
 
         },
-        destroy() {
+        destroy($id) {
             this.$swal.fire({
                 title: 'Are you sure to delete this?',
                 showCancelButton: true,
                 confirmButtonText: 'Confirm',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.post(`/sales/destroy/${this.id}`).then(r => {
+                    axios.post(`/sales/destroy/${$id}`).then(r => {
                         this.$swal('Successfully deleted');
                         this.getData();
 
@@ -176,26 +190,26 @@ export default {
         onChange(e){
             this.file = e.target.file[0];
         },
-        upload(file) {
-            let formData = new FormData()
-            formData.append('file', this.file)
-            const config = {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }
-            axios.post(`/products/upload/${this.id}`, formData, config).then(r => {
-                this.$swal('Successfully uploaded');
-                this.$bvModal.hide("modal-2");
-                this.getData();
-            }).catch(err => {
-                    this.$swal('An error has ocured' + err);
-                    this.$bvModal.hide("modal-2");
-                    this.getData();
-                })
-        },
         generatePDF($id){
             window.location.href = `/sales/createPDF/${$id}`
+        },
+        convertInvoice($id){
+            this.$swal.fire({
+                title: 'Are you sure to invoice this sales order?',
+                showCancelButton: true,
+                confirmButtonText: 'Confirm',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.get(`/sales/toinvoice/${$id}`).then(r => {
+                        this.$swal('Successfully invoiced');
+                        this.getData();
+
+                    }).catch(e => {
+                        this.$swal('An error has ocured' + e);
+                        this.getData();
+                    });
+                }
+            })
         }
     },
     watch: {

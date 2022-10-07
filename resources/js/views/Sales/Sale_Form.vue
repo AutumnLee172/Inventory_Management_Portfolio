@@ -59,12 +59,12 @@
                             </b-form-group>
                         </b-col>
                         <b-col md="1">
-                            <b-form-group label="Original Price" label-for="original_price" class="small-font">
+                            <b-form-group label="Original $" label-for="original_price" class="small-font">
                                 <b-form-input id="original_price" readonly v-model="item.original_price"></b-form-input>
                             </b-form-group>
                         </b-col>
                         <b-col md="1">
-                            <b-form-group label="Selling Price" label-for="selling_price" class="small-font">
+                            <b-form-group label="Selling $" label-for="selling_price" class="small-font">
                                 <b-form-input id="selling_price" v-model="item.selling_price" type="number" step="0.01"
                                     @change="calculateSubtotal(index, item)"></b-form-input>
                             </b-form-group>
@@ -175,21 +175,16 @@ export default {
             items: [{ item_number: '', description: '', original_price: '', selling_price: '', quantity: '', sub_total: '' }],
             displayimage: null,
             perPage: 10,
-            currentPage: 1,
-            fields: [
-                { key: 'item_number', sortable: true },
-                { key: 'description', sortable: true },
-                { key: 'quantity', sortable: true },
-                { key: 'original_price', sortable: true },
-                { key: 'selling_price', sortable: true },
-                { key: 'Edit', sortable: false }
-            ]
+            currentPage: 1
         }
     },
     created() {
         this.fetchCustomer()
         this.fetchProducts()
         this.getClearFormObject()
+        if(this.id){
+            this.getinvoiceData()
+        }
     },
     methods: {
         fetchCustomer() {
@@ -311,19 +306,44 @@ export default {
             let method = 'post'
             let url = '/sales/new'
 
+            if(this.id){
+                url = `/sales/edit/${this.id}`
+            }
+
             axios({
                 method,
                 url,
                 data: this.form
             }).then(r => {
-                this.$swal('Successfully Created');
+                if (!this.id && r.data.data.id) {
+                    this.$swal('Successfully Created');
+                }else {
+                    this.$swal('Successfully updated');
+                }
                 this.isLoading = false;
                 this.$router.push('/sales') 
             }).catch(e => {
                 this.$swal('An error has ocured' + e);
                 this.isLoading = false;
             });
-
+        },
+        getinvoiceData(){
+            axios
+                .get(`/sales/get/${this.id}`)
+                .then((r) => {
+                    if (r.data && r.data.data) {
+                        this.form = r.data.data;
+                        this.selectedCustomer = this.form.customer_id;
+                        this.items = r.data.items;
+                    }
+                })
+                .catch((err) => {
+                    // this.isLoading = false;
+                    this.$bvToast.toast(err, {
+                        title: 'Error',
+                        autoHideDelay: 5000
+                    });
+                });
         }
     },
     watch: {
