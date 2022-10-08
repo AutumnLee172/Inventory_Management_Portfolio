@@ -1,6 +1,14 @@
 <template>
     <div class="container-fluid py-4 px-4">
-        <b-button @click="clear()" v-b-modal.modal-1>Add new</b-button>
+        <b-row class="my-1">
+            <b-col sm="2">
+                <b-button @click="clear()" v-b-modal.modal-1>Add new</b-button>
+            </b-col>
+            <b-col sm="7"></b-col>
+            <b-col sm="3">
+                <b-form-input v-model="search" placeholder="Search"></b-form-input>
+            </b-col>
+        </b-row>
         <div class="card mb-4">
             <div class="card-header">
                 <h2>Products table</h2>
@@ -114,6 +122,7 @@ export default {
         return {
             isBusy: false,
             form: this.getClearFormObject(),
+            search: '',
             items: [],
             file: null,
             displayimage: null,
@@ -121,10 +130,10 @@ export default {
             currentPage: 1,
             fields: [
                 { key: 'item_number', sortable: true },
-                { key: 'description', sortable: true },
-                { key: 'quantity', sortable: true },
-                { key: 'original_price', sortable: true },
-                { key: 'selling_price', sortable: true },
+                { key: 'description', sortable: true},
+                { key: 'quantity', sortable: true, tdClass: 'numberColumn'  },
+                { key: 'original_price', sortable: true, tdClass: 'numberColumn'  },
+                { key: 'selling_price', sortable: true, tdClass: 'numberColumn'  },
                 { key: 'Edit', sortable: false }
             ]
         }
@@ -171,6 +180,24 @@ export default {
                     });
             }
 
+        },
+        searchBy() {
+            this.isBusy = true
+            axios
+                .get(`/products/search/${this.search}`)
+                .then((r) => {
+                    if (r.data && r.data.data) {
+                        this.isBusy = false
+                        this.items = r.data.data;
+                    }
+                })
+                .catch((err) => {
+                    this.isBusy = false
+                    this.$bvToast.toast(`Error: `, {
+                        title: 'Error',
+                        autoHideDelay: 5000
+                    });
+                });
         },
         getClearFormObject() {
             return {
@@ -270,6 +297,13 @@ export default {
         file(newValue) {
             if (newValue) {
 
+            }
+        },
+        search(newValue) {
+            if (newValue == "" || newValue == null) {
+                this.getData();
+            }else if (newValue){
+                this.searchBy();
             }
         }
     }

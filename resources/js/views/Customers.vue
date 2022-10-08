@@ -1,12 +1,21 @@
 <template>
     <div class="container-fluid py-4 px-4">
 
-        <b-button @click="clear()" v-b-modal.modal-1>Add new</b-button>
+        <b-row class="my-1">
+            <b-col sm="2">
+                <b-button @click="clear()" v-b-modal.modal-1>Add new</b-button>
+            </b-col>
+            <b-col sm="7"></b-col>
+            <b-col sm="3">
+                <b-form-input v-model="search" placeholder="Search"></b-form-input>
+            </b-col>
+        </b-row>
+
         <div class="card mb-4">
             <div class="card-header">
                 <h2>Customers table</h2>
             </div>
-            <b-table class="table align-items-center mb-0" id="merchant-table" :fields="fields" head-variant="light"
+            <b-table :busy="isBusy" class="table align-items-center mb-0" id="merchant-table" :fields="fields" head-variant="light"
                 :items="items" sort-by="id" responsive="sm" :per-page="perPage" :current-page="currentPage">
                 <template #cell(Edit)="row">
                     <b-button variant="primary" v-b-modal.modal-1 @click="id=row.item.id">
@@ -15,6 +24,11 @@
                     <b-button variant="danger" @click="destroy(id=row.item.id)">
                         <b-icon icon="trash" font-scale="1"></b-icon>
                     </b-button>
+                </template>
+                <template #table-busy>
+                    <div class="text-center text-danger my-2">
+                        <b-spinner variant="primary" class="align-middle"></b-spinner>
+                    </div>
                 </template>
             </b-table>
         </div>
@@ -73,8 +87,9 @@ export default {
     },
     data() {
         return {
-
+            isBusy: false,
             form: this.getClearFormObject(),
+            search: '',
             items: [],
             perPage: 10,
             currentPage: 1,
@@ -93,16 +108,36 @@ export default {
     },
     methods: {
         getData() {
+            this.isBusy = true
             axios
                 .get(`/customers`)
                 .then((r) => {
                     if (r.data && r.data.data) {
+                        this.isBusy = false
                         this.items = r.data.data;
                     }
                 })
                 .catch((err) => {
-                    // this.isLoading = false;
+                    this.isBusy = false
                     this.$bvToast.toast(err, {
+                        title: 'Error',
+                        autoHideDelay: 5000
+                    });
+                });
+        },
+        searchBy() {
+            this.isBusy = true
+            axios
+                .get(`/customers/search/${this.search}`)
+                .then((r) => {
+                    if (r.data && r.data.data) {
+                        this.isBusy = false
+                        this.items = r.data.data;
+                    }
+                })
+                .catch((err) => {
+                    this.isBusy = false
+                    this.$bvToast.toast(`Error: `, {
                         title: 'Error',
                         autoHideDelay: 5000
                     });
@@ -198,6 +233,13 @@ export default {
             this.form = this.getClearFormObject()
             if (newValue) {
                 this.getEditData()
+            }
+        },
+        search(newValue) {
+            if (newValue == "" || newValue == null) {
+                this.getData();
+            }else if (newValue){
+                this.searchBy();
             }
         }
     }

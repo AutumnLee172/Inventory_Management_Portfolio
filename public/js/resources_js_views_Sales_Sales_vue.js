@@ -57,6 +57,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Sales",
@@ -73,6 +85,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       //form: this.getClearFormObject(),
+      isBusy: false,
+      search: '',
       items: [],
       displayimage: null,
       perPage: 10,
@@ -111,12 +125,15 @@ __webpack_require__.r(__webpack_exports__);
     getData: function getData() {
       var _this = this;
 
+      this.isBusy = true;
       axios__WEBPACK_IMPORTED_MODULE_0___default().get("/sales").then(function (r) {
         if (r.data && r.data.data) {
+          _this.isBusy = false;
           _this.items = r.data.data;
         }
       })["catch"](function (err) {
-        // this.isLoading = false;
+        _this.isBusy = false;
+
         _this.$bvToast.toast(err, {
           title: 'Error',
           autoHideDelay: 5000
@@ -243,6 +260,24 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
       });
+    },
+    searchBy: function searchBy() {
+      var _this6 = this;
+
+      this.isBusy = true;
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get("/sales/search/".concat(this.search)).then(function (r) {
+        if (r.data && r.data.data) {
+          _this6.isBusy = false;
+          _this6.items = r.data.data;
+        }
+      })["catch"](function (err) {
+        _this6.isBusy = false;
+
+        _this6.$bvToast.toast("Error: ", {
+          title: 'Error',
+          autoHideDelay: 5000
+        });
+      });
     }
   },
   watch: {
@@ -251,6 +286,13 @@ __webpack_require__.r(__webpack_exports__);
 
       if (newValue) {
         this.getEditData();
+      }
+    },
+    search: function search(newValue) {
+      if (newValue == "" || newValue == null) {
+        this.getData();
+      } else if (newValue) {
+        this.searchBy();
       }
     }
   }
@@ -347,9 +389,43 @@ var render = function () {
     { staticClass: "container-fluid py-4 px-4" },
     [
       _c(
-        "router-link",
-        { attrs: { to: "/Sales/new" } },
-        [_c("b-button", [_vm._v("Add new")])],
+        "b-row",
+        { staticClass: "my-1" },
+        [
+          _c(
+            "b-col",
+            { attrs: { sm: "2" } },
+            [
+              _c(
+                "router-link",
+                { attrs: { to: "/Sales/new" } },
+                [_c("b-button", [_vm._v("Add new")])],
+                1
+              ),
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("b-col", { attrs: { sm: "7" } }),
+          _vm._v(" "),
+          _c(
+            "b-col",
+            { attrs: { sm: "3" } },
+            [
+              _c("b-form-input", {
+                attrs: { placeholder: "Search" },
+                model: {
+                  value: _vm.search,
+                  callback: function ($$v) {
+                    _vm.search = $$v
+                  },
+                  expression: "search",
+                },
+              }),
+            ],
+            1
+          ),
+        ],
         1
       ),
       _vm._v(" "),
@@ -362,6 +438,7 @@ var render = function () {
           _c("b-table", {
             staticClass: "table align-items-center mb-0",
             attrs: {
+              busy: _vm.isBusy,
               id: "sales-table",
               fields: _vm.fields,
               "head-variant": "light",
@@ -531,6 +608,25 @@ var render = function () {
                       : _vm._e(),
                   ]
                 },
+              },
+              {
+                key: "table-busy",
+                fn: function () {
+                  return [
+                    _c(
+                      "div",
+                      { staticClass: "text-center text-danger my-2" },
+                      [
+                        _c("b-spinner", {
+                          staticClass: "align-middle",
+                          attrs: { variant: "primary" },
+                        }),
+                      ],
+                      1
+                    ),
+                  ]
+                },
+                proxy: true,
               },
             ]),
           }),

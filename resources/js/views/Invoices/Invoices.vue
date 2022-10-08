@@ -1,12 +1,18 @@
 <template>
     <div class="container-fluid py-4 px-4">
+        <b-row class="my-3">
+            <b-col sm="9"></b-col>
+            <b-col sm="3">
+                <b-form-input v-model="search" placeholder="Search"></b-form-input>
+            </b-col>
+        </b-row>
         <!-- <router-link to="/invoices/new"><b-button>Add new</b-button></router-link> -->
         
         <div class="card mb-4">
             <div class="card-header">
                 <h2>Invoices table</h2>
             </div>
-            <b-table class="table align-items-center mb-0" id="sales-table" :fields="fields" head-variant="light"
+            <b-table :busy="isBusy" class="table align-items-center mb-0" id="sales-table" :fields="fields" head-variant="light"
                 :items="items" sort-by="id" :sort-desc=true responsive="sm" :per-page="perPage" :current-page="currentPage">
                 <template #cell(Edit)="row">
                     <b-button variant="success" @click="complete(row.item.id)" v-if="row.item.status == 'Pending'">
@@ -18,6 +24,11 @@
                     <b-button variant="info" @click="generatePDF(row.item.id)">
                         <b-icon icon="file-earmark-arrow-down" font-scale="1"></b-icon>
                     </b-button>
+                </template>
+                <template #table-busy>
+                    <div class="text-center text-danger my-2">
+                        <b-spinner variant="primary" class="align-middle"></b-spinner>
+                    </div>
                 </template>
             </b-table>
         </div>
@@ -47,7 +58,9 @@ export default {
     data() {
         return {
             //form: this.getClearFormObject(),
+            isBusy: false,
             items: [],
+            search: '',
             file: null,
             displayimage: null,
             perPage: 10,
@@ -69,15 +82,17 @@ export default {
     },
     methods: {
         getData() {
+            this.isBusy = true
             axios
                 .get('/invoices')
                 .then((r) => {
-                    if (r.data && r.data.data) {
+                    this.isBusy = false
+                    if (r.data && r.data.data) {                        
                         this.items = r.data.data;
                     }
                 })
                 .catch((err) => {
-                    // this.isLoading = false;
+                    this.isBusy = false
                     this.$bvToast.toast(err, {
                         title: 'Error',
                         autoHideDelay: 5000
@@ -105,6 +120,24 @@ export default {
                 }
             })
         },
+        searchBy() {
+            this.isBusy = true
+            axios
+                .get(`/invoices/search/${this.search}`)
+                .then((r) => {
+                    if (r.data && r.data.data) {
+                        this.isBusy = false
+                        this.items = r.data.data;
+                    }
+                })
+                .catch((err) => {
+                    this.isBusy = false
+                    this.$bvToast.toast(`Error: `, {
+                        title: 'Error',
+                        autoHideDelay: 5000
+                    });
+                });
+        },
     },
     watch: {
         id(newValue) {
@@ -113,9 +146,11 @@ export default {
                 this.getEditData()
             }
         },
-        file(newValue){
-            if (newValue) {
-              
+        search(newValue) {
+            if (newValue == "" || newValue == null) {
+                this.getData();
+            }else if (newValue){
+                this.searchBy();
             }
         }
     }

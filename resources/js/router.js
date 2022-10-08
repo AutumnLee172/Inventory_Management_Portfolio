@@ -28,6 +28,11 @@ export default new Router({
       component: () => import('./views/Customers.vue')
     },
     {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('./views/Profile.vue')
+    },
+    {
       path: '/invoices',
       name: 'invoices',
       component: () => import('./views/Invoices/Invoices.vue')
@@ -52,6 +57,16 @@ export default new Router({
       name: 'sales.edit',
       component: () => import('./views/Sales/Sale_Form.vue'),
       props: true
+    },
+    {
+      path: '/Cash',
+      name: 'cash',
+      component: () => import('./views/Cash/Cash.vue')
+    },
+    {
+      path: '/Cash/new',
+      name: 'cash.new',
+      component: () => import('./views/Cash/Cash_Form.vue')
     },
   ],
   scrollBehavior (to, from, savedPosition) {

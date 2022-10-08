@@ -234,4 +234,12 @@ class SalesController extends Controller
             'data' => $invoice
         ]);
     }
+
+    public function search($keywords){
+        $sales = Sale::where('customer_name', 'LIKE', "%$keywords%")->orWhere('phone_number', 'LIKE', "%$keywords%")->orWhere('address', 'LIKE', "%$keywords%")->orWhere('transaction_id', 'LIKE', "%$keywords%")->orWhere('remark', 'LIKE', "%$keywords%")->get();
+
+        return response()->json([
+            'data' => $sales
+        ]);
+    }
 }

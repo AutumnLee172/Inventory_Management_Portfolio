@@ -98,4 +98,12 @@ class ProductsController extends Controller
             'status' => true
         ]);
     }
+
+    public function search($keywords){
+        $products = Product::where('item_number', 'LIKE', "%$keywords%")->orWhere('description', 'LIKE', "%$keywords%")->get();
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
 }

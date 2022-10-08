@@ -93,4 +93,12 @@ class InvoicesController extends Controller
             ]
         ]);
     }
+
+    public function search($keywords){
+        $invoices = Invoice::where('customer_name', 'LIKE', "%$keywords%")->orWhere('phone_number', 'LIKE', "%$keywords%")->orWhere('address', 'LIKE', "%$keywords%")->orWhere('transaction_id', 'LIKE', "%$keywords%")->orWhere('remark', 'LIKE', "%$keywords%")->get();
+
+        return response()->json([
+            'data' => $invoices
+        ]);
+    }
 }

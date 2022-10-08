@@ -106,6 +106,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Products",
@@ -126,6 +134,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       isBusy: false,
       form: this.getClearFormObject(),
+      search: '',
       items: [],
       file: null,
       displayimage: null,
@@ -139,13 +148,16 @@ __webpack_require__.r(__webpack_exports__);
         sortable: true
       }, {
         key: 'quantity',
-        sortable: true
+        sortable: true,
+        tdClass: 'numberColumn'
       }, {
         key: 'original_price',
-        sortable: true
+        sortable: true,
+        tdClass: 'numberColumn'
       }, {
         key: 'selling_price',
-        sortable: true
+        sortable: true,
+        tdClass: 'numberColumn'
       }, {
         key: 'Edit',
         sortable: false
@@ -193,6 +205,24 @@ __webpack_require__.r(__webpack_exports__);
         });
       }
     },
+    searchBy: function searchBy() {
+      var _this3 = this;
+
+      this.isBusy = true;
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get("/products/search/".concat(this.search)).then(function (r) {
+        if (r.data && r.data.data) {
+          _this3.isBusy = false;
+          _this3.items = r.data.data;
+        }
+      })["catch"](function (err) {
+        _this3.isBusy = false;
+
+        _this3.$bvToast.toast("Error: ", {
+          title: 'Error',
+          autoHideDelay: 5000
+        });
+      });
+    },
     getClearFormObject: function getClearFormObject() {
       return {
         id: null,
@@ -205,7 +235,7 @@ __webpack_require__.r(__webpack_exports__);
       };
     },
     submit: function submit() {
-      var _this3 = this;
+      var _this4 = this;
 
       var method = 'post';
       var url = '/products/add';
@@ -221,29 +251,29 @@ __webpack_require__.r(__webpack_exports__);
         url: url,
         data: this.form
       }).then(function (r) {
-        if (!_this3.id && r.data.data.id) {
-          _this3.$swal('Successfully Created');
+        if (!_this4.id && r.data.data.id) {
+          _this4.$swal('Successfully Created');
 
-          _this3.$bvModal.hide("modal-1");
+          _this4.$bvModal.hide("modal-1");
 
-          _this3.getData();
+          _this4.getData();
         } else {
-          _this3.$swal('Successfully updated');
+          _this4.$swal('Successfully updated');
 
-          _this3.$bvModal.hide("modal-1");
+          _this4.$bvModal.hide("modal-1");
 
-          _this3.getData();
+          _this4.getData();
         }
       })["catch"](function (e) {
-        _this3.$swal('An error has ocured' + e);
+        _this4.$swal('An error has ocured' + e);
 
-        _this3.$bvModal.hide("modal-1");
+        _this4.$bvModal.hide("modal-1");
 
-        _this3.getData();
+        _this4.getData();
       });
     },
     destroy: function destroy() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.$swal.fire({
         title: 'Are you sure to delete this?',
@@ -251,14 +281,14 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: 'Confirm'
       }).then(function (result) {
         if (result.isConfirmed) {
-          axios__WEBPACK_IMPORTED_MODULE_0___default().post("/products/destroy/".concat(_this4.id)).then(function (r) {
-            _this4.$swal('Successfully deleted');
+          axios__WEBPACK_IMPORTED_MODULE_0___default().post("/products/destroy/".concat(_this5.id)).then(function (r) {
+            _this5.$swal('Successfully deleted');
 
-            _this4.getData();
+            _this5.getData();
           })["catch"](function (e) {
-            _this4.$swal('An error has ocured' + e);
+            _this5.$swal('An error has ocured' + e);
 
-            _this4.getData();
+            _this5.getData();
           });
         }
       });
@@ -271,7 +301,7 @@ __webpack_require__.r(__webpack_exports__);
       this.file = e.target.file[0];
     },
     upload: function upload(file) {
-      var _this5 = this;
+      var _this6 = this;
 
       var formData = new FormData();
       formData.append('file', this.file);
@@ -281,17 +311,17 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       axios__WEBPACK_IMPORTED_MODULE_0___default().post("/products/upload/".concat(this.id), formData, config).then(function (r) {
-        _this5.$swal('Successfully uploaded');
+        _this6.$swal('Successfully uploaded');
 
-        _this5.$bvModal.hide("modal-2");
+        _this6.$bvModal.hide("modal-2");
 
-        _this5.getData();
+        _this6.getData();
       })["catch"](function (err) {
-        _this5.$swal('An error has ocured' + err);
+        _this6.$swal('An error has ocured' + err);
 
-        _this5.$bvModal.hide("modal-2");
+        _this6.$bvModal.hide("modal-2");
 
-        _this5.getData();
+        _this6.getData();
       });
     }
   },
@@ -305,6 +335,13 @@ __webpack_require__.r(__webpack_exports__);
     },
     file: function file(newValue) {
       if (newValue) {}
+    },
+    search: function search(newValue) {
+      if (newValue == "" || newValue == null) {
+        this.getData();
+      } else if (newValue) {
+        this.searchBy();
+      }
     }
   }
 });
@@ -400,22 +437,56 @@ var render = function () {
     { staticClass: "container-fluid py-4 px-4" },
     [
       _c(
-        "b-button",
-        {
-          directives: [
-            {
-              name: "b-modal",
-              rawName: "v-b-modal.modal-1",
-              modifiers: { "modal-1": true },
-            },
-          ],
-          on: {
-            click: function ($event) {
-              return _vm.clear()
-            },
-          },
-        },
-        [_vm._v("Add new")]
+        "b-row",
+        { staticClass: "my-1" },
+        [
+          _c(
+            "b-col",
+            { attrs: { sm: "2" } },
+            [
+              _c(
+                "b-button",
+                {
+                  directives: [
+                    {
+                      name: "b-modal",
+                      rawName: "v-b-modal.modal-1",
+                      modifiers: { "modal-1": true },
+                    },
+                  ],
+                  on: {
+                    click: function ($event) {
+                      return _vm.clear()
+                    },
+                  },
+                },
+                [_vm._v("Add new")]
+              ),
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("b-col", { attrs: { sm: "7" } }),
+          _vm._v(" "),
+          _c(
+            "b-col",
+            { attrs: { sm: "3" } },
+            [
+              _c("b-form-input", {
+                attrs: { placeholder: "Search" },
+                model: {
+                  value: _vm.search,
+                  callback: function ($$v) {
+                    _vm.search = $$v
+                  },
+                  expression: "search",
+                },
+              }),
+            ],
+            1
+          ),
+        ],
+        1
       ),
       _vm._v(" "),
       _c(

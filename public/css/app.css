@@ -27118,3 +27118,7 @@ pre[class*=language-] {
 .small-font{
   font-size: 0.6rem;
 }
+
+.numberColumn{
+  max-width: 100px;
+}

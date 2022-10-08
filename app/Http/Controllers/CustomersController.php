@@ -68,4 +68,12 @@ class CustomersController extends Controller
             'data' => $customer
         ]);
     }
+
+    public function search($keywords){
+        $customers = Customer::where('name', 'LIKE', "%$keywords%")->orWhere('phone_number', 'LIKE', "%$keywords%")->orWhere('address', 'LIKE', "%$keywords%")->orWhere('remark', 'LIKE', "%$keywords%")->get();
+
+        return response()->json([
+            'data' => $customers
+        ]);
+    }
 }
