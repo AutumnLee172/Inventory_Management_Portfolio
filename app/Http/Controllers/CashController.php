@@ -49,7 +49,7 @@ class CashController extends Controller
         foreach($items as $i){
             $content = new Content;
             $content->transaction_id = $uuid;
-            $content->transaction_type = "Invoice";
+            $content->transaction_type = "Cash Sale";
             $content->item_number = $i['item_number'];
             $content->description = $i['description'];
             $content->original_price = $i['original_price'];
