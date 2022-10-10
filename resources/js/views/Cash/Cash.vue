@@ -15,11 +15,16 @@
                 <h2>Cash Sales table</h2>
             </div>
             <b-table :busy="isBusy" class="table align-items-center mb-0" id="sales-table" :fields="fields" head-variant="light"
-                :items="items" sort-by="id" :sort-desc=true responsive="sm" :per-page="perPage" :current-page="currentPage">
+                :items="items" sort-by="transaction_id" :sort-desc=true responsive="sm" :per-page="perPage" :current-page="currentPage">
                 <template #cell(Edit)="row">
                     <b-button variant="info" @click="generatePDF(row.item.id)">
                         <b-icon icon="file-earmark-arrow-down" font-scale="1"></b-icon>
                     </b-button>
+                    <router-link :to="{name:'cash.edit', params: {id: row.item.id}}">
+                    <b-button variant="primary">
+                        <b-icon icon="pencil-square" font-scale="1"></b-icon>
+                    </b-button>
+                    </router-link>
                     <b-button variant="danger" @click="destroy(id=row.item.id)">
                         <b-icon icon="trash" font-scale="1"></b-icon>
                     </b-button>
@@ -63,11 +68,10 @@ export default {
             perPage: 10,
             currentPage: 1,
             fields: [
-                { key: 'id', sortable: true },
+                { key: 'transaction_id', sortable: true },   
                 { key: 'customer_name', sortable: true },
                 { key: 'total', sortable: true },
-                { key: 'deposit', sortable: true },
-                { key: 'transaction_id', sortable: true },                
+                { key: 'deposit', sortable: true },             
                 { key: 'created_date', sortable: true },
                 { key: 'status', sortable: true },
                 { key: 'Edit', sortable: false }

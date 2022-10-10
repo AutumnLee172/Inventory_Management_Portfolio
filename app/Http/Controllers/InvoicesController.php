@@ -19,7 +19,8 @@ class InvoicesController extends Controller
     public function create(Request $request)
     {
         DB::beginTransaction();
-        $uuid = Str::uuid()->toString();
+        $getid = Invoice::orderBy('id', 'desc')->first()->id + 1;
+        $uuid = str_pad($getid,6, 'I00000', STR_PAD_LEFT);
         $invoice = new Invoice;
     
         $invoice->customer_id = ($request->has('customer_id') && !empty($request->get('customer_id'))) ? $request->get('customer_id') : '';

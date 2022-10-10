@@ -68,6 +68,12 @@ export default new Router({
       name: 'cash.new',
       component: () => import('./views/Cash/Cash_Form.vue')
     },
+    {
+      path: '/Cash/edit/:id',
+      name: 'cash.edit',
+      component: () => import('./views/Cash/Cash_Form.vue'),
+      props: true
+    }
   ],
   scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {

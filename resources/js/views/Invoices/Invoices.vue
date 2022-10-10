@@ -13,7 +13,7 @@
                 <h2>Invoices table</h2>
             </div>
             <b-table :busy="isBusy" class="table align-items-center mb-0" id="sales-table" :fields="fields" head-variant="light"
-                :items="items" sort-by="id" :sort-desc=true responsive="sm" :per-page="perPage" :current-page="currentPage">
+                :items="items" sort-by="transaction_id" :sort-desc=true responsive="sm" :per-page="perPage" :current-page="currentPage">
                 <template #cell(Edit)="row">
                     <b-button variant="success" @click="complete(row.item.id)" v-if="row.item.status == 'Pending'">
                         <b-icon icon="check2-circle" font-scale="1"></b-icon>
@@ -66,11 +66,10 @@ export default {
             perPage: 10,
             currentPage: 1,
             fields: [
-                { key: 'id', sortable: true },
+                { key: 'transaction_id', sortable: true },      
                 { key: 'customer_name', sortable: true },
                 { key: 'total', sortable: true },
-                { key: 'balance', sortable: true },
-                { key: 'transaction_id', sortable: true },                
+                { key: 'balance', sortable: true },          
                 { key: 'created_date', sortable: true },
                 { key: 'status', sortable: true },
                 { key: 'Edit', sortable: false }

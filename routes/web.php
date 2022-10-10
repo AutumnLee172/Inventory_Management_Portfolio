@@ -75,4 +75,6 @@ Route::prefix('/cash')->group(function () {
     Route::get('/createPDF/{id}', 'App\Http\Controllers\CashController@createPDF');
     Route::post('/destroy/{id}', 'App\Http\Controllers\CashController@destroy');
     Route::get('/search/{keywords}', 'App\Http\Controllers\CashController@search');
+    Route::post('/edit/{id}', 'App\Http\Controllers\CashController@update');
+    Route::get('/get/{id}', 'App\Http\Controllers\CashController@getCashSale');
 });

@@ -53,6 +53,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Cash",
@@ -75,7 +80,7 @@ __webpack_require__.r(__webpack_exports__);
       perPage: 10,
       currentPage: 1,
       fields: [{
-        key: 'id',
+        key: 'transaction_id',
         sortable: true
       }, {
         key: 'customer_name',
@@ -85,9 +90,6 @@ __webpack_require__.r(__webpack_exports__);
         sortable: true
       }, {
         key: 'deposit',
-        sortable: true
-      }, {
-        key: 'transaction_id',
         sortable: true
       }, {
         key: 'created_date',
@@ -338,7 +340,7 @@ var render = function () {
               fields: _vm.fields,
               "head-variant": "light",
               items: _vm.items,
-              "sort-by": "id",
+              "sort-by": "transaction_id",
               "sort-desc": true,
               responsive: "sm",
               "per-page": _vm.perPage,
@@ -366,6 +368,34 @@ var render = function () {
                             "font-scale": "1",
                           },
                         }),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "router-link",
+                      {
+                        attrs: {
+                          to: {
+                            name: "cash.edit",
+                            params: { id: row.item.id },
+                          },
+                        },
+                      },
+                      [
+                        _c(
+                          "b-button",
+                          { attrs: { variant: "primary" } },
+                          [
+                            _c("b-icon", {
+                              attrs: {
+                                icon: "pencil-square",
+                                "font-scale": "1",
+                              },
+                            }),
+                          ],
+                          1
+                        ),
                       ],
                       1
                     ),

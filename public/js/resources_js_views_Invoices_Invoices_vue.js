@@ -78,7 +78,7 @@ __webpack_require__.r(__webpack_exports__);
       perPage: 10,
       currentPage: 1,
       fields: [{
-        key: 'id',
+        key: 'transaction_id',
         sortable: true
       }, {
         key: 'customer_name',
@@ -88,9 +88,6 @@ __webpack_require__.r(__webpack_exports__);
         sortable: true
       }, {
         key: 'balance',
-        sortable: true
-      }, {
-        key: 'transaction_id',
         sortable: true
       }, {
         key: 'created_date',
@@ -319,7 +316,7 @@ var render = function () {
               fields: _vm.fields,
               "head-variant": "light",
               items: _vm.items,
-              "sort-by": "id",
+              "sort-by": "transaction_id",
               "sort-desc": true,
               responsive: "sm",
               "per-page": _vm.perPage,
