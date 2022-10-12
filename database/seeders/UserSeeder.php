@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'Jack',
             'password' => '$2y$10$48BIfgNV8y/uigMOgTW/cOp/uWuD9UBSC0aCP8JaYnvhiwqvw2Uwy',
-            'email' => 'jaclightenterprise@gmail.com',
+            'email' => 'jaclight.enterprise@gmail.com',
 
         ]);
     }

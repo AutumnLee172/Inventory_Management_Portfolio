@@ -451,17 +451,20 @@ var render = function () {
                 key: "cell(Edit)",
                 fn: function (row) {
                   return [
-                    row.item.status == "Pending"
-                      ? _c(
-                          "b-button",
-                          {
-                            attrs: { variant: "success" },
-                            on: {
-                              click: function ($event) {
-                                return _vm.convertInvoice(row.item.id)
-                              },
-                            },
+                    _c(
+                      "router-link",
+                      {
+                        attrs: {
+                          to: {
+                            name: "sales.checkout",
+                            params: { id: row.item.id },
                           },
+                        },
+                      },
+                      [
+                        _c(
+                          "b-button",
+                          { attrs: { variant: "success" } },
                           [
                             _c("b-icon", {
                               attrs: {
@@ -471,31 +474,10 @@ var render = function () {
                             }),
                           ],
                           1
-                        )
-                      : _vm._e(),
-                    _vm._v(" "),
-                    row.item.status == "Invoiced"
-                      ? _c(
-                          "b-button",
-                          {
-                            attrs: { variant: "success", disabled: "" },
-                            on: {
-                              click: function ($event) {
-                                return _vm.convertInvoice(row.item.id)
-                              },
-                            },
-                          },
-                          [
-                            _c("b-icon", {
-                              attrs: {
-                                icon: "check2-circle",
-                                "font-scale": "1",
-                              },
-                            }),
-                          ],
-                          1
-                        )
-                      : _vm._e(),
+                        ),
+                      ],
+                      1
+                    ),
                     _vm._v(" "),
                     _c(
                       "b-button",
@@ -518,40 +500,20 @@ var render = function () {
                       1
                     ),
                     _vm._v(" "),
-                    row.item.status == "Pending"
-                      ? _c(
-                          "router-link",
-                          {
-                            attrs: {
-                              to: {
-                                name: "sales.edit",
-                                params: { id: row.item.id },
-                              },
-                            },
+                    _c(
+                      "router-link",
+                      {
+                        attrs: {
+                          to: {
+                            name: "sales.edit",
+                            params: { id: row.item.id },
                           },
-                          [
-                            _c(
-                              "b-button",
-                              { attrs: { variant: "primary" } },
-                              [
-                                _c("b-icon", {
-                                  attrs: {
-                                    icon: "pencil-square",
-                                    "font-scale": "1",
-                                  },
-                                }),
-                              ],
-                              1
-                            ),
-                          ],
-                          1
-                        )
-                      : _vm._e(),
-                    _vm._v(" "),
-                    row.item.status == "Invoiced"
-                      ? _c(
+                        },
+                      },
+                      [
+                        _c(
                           "b-button",
-                          { attrs: { variant: "primary", disabled: "" } },
+                          { attrs: { variant: "primary" } },
                           [
                             _c("b-icon", {
                               attrs: {
@@ -561,8 +523,10 @@ var render = function () {
                             }),
                           ],
                           1
-                        )
-                      : _vm._e(),
+                        ),
+                      ],
+                      1
+                    ),
                     _vm._v(" "),
                     row.item.status == "Pending"
                       ? _c(

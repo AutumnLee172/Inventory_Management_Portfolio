@@ -2,7 +2,9 @@
     <div class="container-fluid py-4 px-4">
         <b-row class="my-1">
             <b-col sm="2">
-                <router-link to="/Sales/new"><b-button>Add new</b-button></router-link>
+                <router-link to="/Sales/new">
+                    <b-button>Add new</b-button>
+                </router-link>
             </b-col>
             <b-col sm="7"></b-col>
             <b-col sm="3">
@@ -13,30 +15,28 @@
             <div class="card-header">
                 <h2>Sales Order table</h2>
             </div>
-            <b-table :busy="isBusy" class="table align-items-center mb-0" id="sales-table" :fields="fields" head-variant="light"
-                :items="items" sort-by="transaction_id" :sort-desc=true responsive="sm" :per-page="perPage" :current-page="currentPage">
+            <b-table :busy="isBusy" class="table align-items-center mb-0" id="sales-table" :fields="fields"
+                head-variant="light" :items="items" sort-by="transaction_id" :sort-desc=true responsive="sm"
+                :per-page="perPage" :current-page="currentPage">
                 <template #cell(Edit)="row">
-                    <b-button variant="success" @click="convertInvoice(row.item.id)" v-if="row.item.status == 'Pending'">
-                        <b-icon icon="check2-circle" font-scale="1"></b-icon>
-                    </b-button>
-                    <b-button variant="success" @click="convertInvoice(row.item.id)" v-if="row.item.status == 'Invoiced'" disabled>
-                        <b-icon icon="check2-circle" font-scale="1"></b-icon>
-                    </b-button>
+                    <router-link :to="{name:'sales.checkout', params: {id: row.item.id}}">
+                        <b-button variant="success">
+                            <b-icon icon="check2-circle" font-scale="1"></b-icon>
+                        </b-button>
+                    </router-link>
                     <b-button variant="info" @click="generatePDF(row.item.id)">
                         <b-icon icon="file-earmark-arrow-down" font-scale="1"></b-icon>
                     </b-button>
-                    <router-link :to="{name:'sales.edit', params: {id: row.item.id}}" v-if="row.item.status == 'Pending'">
-                    <b-button variant="primary">
-                        <b-icon icon="pencil-square" font-scale="1"></b-icon>
-                    </b-button>
+                    <router-link :to="{name:'sales.edit', params: {id: row.item.id}}">
+                        <b-button variant="primary">
+                            <b-icon icon="pencil-square" font-scale="1"></b-icon>
+                        </b-button>
                     </router-link>
-                    <b-button variant="primary" v-if="row.item.status == 'Invoiced'" disabled>
-                        <b-icon icon="pencil-square" font-scale="1"></b-icon>
-                    </b-button>
                     <b-button variant="danger" @click="destroy(id=row.item.id)" v-if="row.item.status == 'Pending'">
                         <b-icon icon="trash" font-scale="1"></b-icon>
                     </b-button>
-                    <b-button variant="danger" @click="destroy(id=row.item.id)" v-if="row.item.status == 'Invoiced'" disabled>
+                    <b-button variant="danger" @click="destroy(id=row.item.id)" v-if="row.item.status == 'Invoiced'"
+                        disabled>
                         <b-icon icon="trash" font-scale="1"></b-icon>
                     </b-button>
                 </template>
@@ -49,7 +49,7 @@
         </div>
         <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" aria-controls="sales-table">
         </b-pagination>
-        
+
     </div>
 
 </template>
@@ -74,7 +74,7 @@ export default {
         return {
             //form: this.getClearFormObject(),
             isBusy: false,
-            search: '',            
+            search: '',
             items: [],
             displayimage: null,
             perPage: 10,
@@ -83,7 +83,7 @@ export default {
                 { key: 'transaction_id', sortable: true },
                 { key: 'customer_name', sortable: true },
                 { key: 'total', sortable: true },
-                { key: 'deposit', sortable: true },                
+                { key: 'deposit', sortable: true },
                 { key: 'created_date', sortable: true },
                 { key: 'status', sortable: true },
                 { key: 'Edit', sortable: false }
@@ -113,7 +113,7 @@ export default {
                 });
         },
         editForm() {
-           
+
         },
         getEditData() {
             // this.isLoading = true;
@@ -202,13 +202,13 @@ export default {
             this.id = null
             this.form = this.getClearFormObject()
         },
-        onChange(e){
+        onChange(e) {
             this.file = e.target.file[0];
         },
-        generatePDF($id){
+        generatePDF($id) {
             window.location.href = `/sales/createPDF/${$id}`
         },
-        convertInvoice($id){
+        convertInvoice($id) {
             this.$swal.fire({
                 title: 'Are you sure to invoice this sales order?',
                 showCancelButton: true,
@@ -225,7 +225,7 @@ export default {
                     });
                 }
             })
-        }, 
+        },
         searchBy() {
             this.isBusy = true
             axios
@@ -255,7 +255,7 @@ export default {
         search(newValue) {
             if (newValue == "" || newValue == null) {
                 this.getData();
-            }else if (newValue){
+            } else if (newValue) {
                 this.searchBy();
             }
         }

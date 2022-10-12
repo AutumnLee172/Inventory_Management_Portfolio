@@ -59,6 +59,12 @@ export default new Router({
       props: true
     },
     {
+      path: '/Sales/checkout/:id',
+      name: 'sales.checkout',
+      component: () => import('./views/Sales/Sale_Checkout.vue'),
+      props: true
+    },
+    {
       path: '/Cash',
       name: 'cash',
       component: () => import('./views/Cash/Cash.vue')

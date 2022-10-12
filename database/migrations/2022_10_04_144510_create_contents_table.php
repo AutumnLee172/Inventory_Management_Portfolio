@@ -23,6 +23,7 @@ class CreateContentsTable extends Migration
             $table->string('selling_price');
             $table->string('quantity');
             $table->string('sub_total');
+            $table->string('checked')->nullable();
             $table->timestamps();
         });
     }

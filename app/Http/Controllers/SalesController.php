@@ -70,14 +70,15 @@ class SalesController extends Controller
             $content->selling_price = $i['selling_price'];
             $content->quantity = $i['quantity'];
             $content->sub_total = $i['sub_total'];
+            $content->checked = "0";
             $content->save();
 
-            $product = Product::where('item_number', $i['item_number'])->first();
-            $current_quantity = (float) $product->quantity;
-            $invoice_quantity = (float) $i['quantity'];
-            $new_quantity = $current_quantity - $invoice_quantity;
-            $product->quantity = $new_quantity;
-            $product->save();
+            // $product = Product::where('item_number', $i['item_number'])->first();
+            // $current_quantity = (float) $product->quantity;
+            // $invoice_quantity = (float) $i['quantity'];
+            // $new_quantity = $current_quantity - $invoice_quantity;
+            // $product->quantity = $new_quantity;
+            // $product->save();
         }
         
         return response()->json([
@@ -121,7 +122,7 @@ class SalesController extends Controller
 
     public function getSale($id){
         $sale = Sale::find($id);
-        $contents = Content::select('item_number','description', 'original_price', 'selling_price', 'quantity' , 'sub_total')->where('transaction_id',$sale->transaction_id)->get();
+        $contents = Content::select('item_number','description', 'original_price', 'selling_price', 'quantity' , 'sub_total', 'checked')->where('transaction_id',$sale->transaction_id)->get();
         return response()->json([
             'data' => $sale,
             'items' => $contents
