@@ -129,6 +129,15 @@ class SalesController extends Controller
         ]);
     }
 
+    public function getSaleforcheckout($id){
+        $sale = Sale::find($id);
+        $contents = Content::select('item_number','description', 'original_price', 'selling_price', 'quantity' , 'sub_total', 'checked')->where('transaction_id',$sale->transaction_id)->where('checked',0)->get();
+        return response()->json([
+            'data' => $sale,
+            'items' => $contents
+        ]);
+    }
+
     public function update($id, Request $request){
         DB::beginTransaction();
         $sale = Sale::find($id);    
@@ -151,14 +160,14 @@ class SalesController extends Controller
 
         //increase back the stock quantity
         $contents = Content::where('transaction_id',$sale->transaction_id)->get();
-        foreach($contents as $c){
-            $product = Product::where('item_number', $c['item_number'])->first();
-            $current_quantity = (float) $product->quantity;
-            $invoice_quantity = (float) $c['quantity'];
-            $new_quantity = $current_quantity + $invoice_quantity;
-            $product->quantity = $new_quantity;
-            $product->save();
-        }
+        // foreach($contents as $c){
+        //     $product = Product::where('item_number', $c['item_number'])->first();
+        //     $current_quantity = (float) $product->quantity;
+        //     $invoice_quantity = (float) $c['quantity'];
+        //     $new_quantity = $current_quantity + $invoice_quantity;
+        //     $product->quantity = $new_quantity;
+        //     $product->save();
+        // }
         $contents->each->delete();
         //decrease the stock quantity and save in database
         $items = $request->get('cart');
@@ -172,14 +181,15 @@ class SalesController extends Controller
             $content->quantity = $i['quantity'];
             $content->sub_total = $i['sub_total'];
             $content->transaction_id = $sale->transaction_id;
+            $content->checked = $i['checked'];
             $content->save();
 
-            $product = Product::where('item_number', $i['item_number'])->first();
-            $current_quantity = (float) $product->quantity;
-            $invoice_quantity = (float) $i['quantity'];
-            $new_quantity = $current_quantity - $invoice_quantity;
-            $product->quantity = $new_quantity;
-            $product->save();
+            // $product = Product::where('item_number', $i['item_number'])->first();
+            // $current_quantity = (float) $product->quantity;
+            // $invoice_quantity = (float) $i['quantity'];
+            // $new_quantity = $current_quantity - $invoice_quantity;
+            // $product->quantity = $new_quantity;
+            // $product->save();
         }
         
         return response()->json([
@@ -188,7 +198,7 @@ class SalesController extends Controller
 
     }
 
-    public function toinvoice($id){
+    public function toinvoice(Request $request, $id){
         $sale = Sale::find($id);
         $getid = Invoice::orderBy('id', 'desc')->first()->id + 1;
         $uuid = str_pad($getid,6, 'I00000', STR_PAD_LEFT);
@@ -200,12 +210,12 @@ class SalesController extends Controller
         $invoice->customer_name = $sale->customer_name;
         $invoice->phone_number =  $sale->phone_number;
         $invoice->address = $sale->address;
-        $invoice->remark = $sale->remark;
-        $invoice->total = $sale->total;
-        $invoice->discount = $sale->discount;
-        $invoice->net = $sale->net;
-        $invoice->deposit = $sale->deposit;
-        $invoice->balance = $sale->balance;
+        $invoice->remark = ($request->has('remark') && !empty($request->get('remark'))) ? $request->get('remark') : '';
+        $invoice->total = ($request->has('total') && !empty($request->get('total'))) ? $request->get('total') : 0;
+        $invoice->discount = ($request->has('discount') && !empty($request->get('discount'))) ? $request->get('discount') : 0;
+        $invoice->net = ($request->has('net') && !empty($request->get('net'))) ? $request->get('net') : 0;
+        $invoice->deposit = ($request->has('deposit') && !empty($request->get('deposit'))) ? $request->get('deposit') : 0;
+        $invoice->balance = ($request->has('balance') && !empty($request->get('balance'))) ? $request->get('balance') : 0;
         $invoice->status = "Pending";
         $invoice->transaction_id = $uuid;
         $invoice->created_date = new DateTime();
@@ -216,23 +226,45 @@ class SalesController extends Controller
                 DB::rollback();
             }
         
-        $sale->status ="Invoiced";
-        $sale->save();
-
-        $items = Content::where('transaction_id',$sale->transaction_id)->get();
+        $contents = Content::where('transaction_id',$sale->transaction_id)->where('checked',0)->get();
+        $contents->each->delete();
+        $items = $request->get('cart');
         foreach($items as $i){
-            $content = new Content;
-            $content->transaction_id = $uuid;
-            $content->transaction_type = "Invoice";
-            $content->item_number = $i['item_number'];
-            $content->description = $i['description'];
-            $content->original_price = $i['original_price'];
-            $content->selling_price = $i['selling_price'];
-            $content->quantity = $i['quantity'];
-            $content->sub_total = $i['sub_total'];
-            $content->save();
+            if($i["checked"] == "1"){
+                $content = new Content;
+                $content->transaction_id = $uuid;
+                $content->transaction_type = "Invoice";
+                $content->item_number = $i['item_number'];
+                $content->description = $i['description'];
+                $content->original_price = $i['original_price'];
+                $content->selling_price = $i['selling_price'];
+                $content->quantity = $i['quantity'];
+                $content->sub_total = $i['sub_total'];
+                $content->checked = $i["checked"];
+                $content->save();
+    
+                $product = Product::where('item_number', $i['item_number'])->first();
+                $current_quantity = (float) $product->quantity;
+                $invoice_quantity = (float) $i['quantity'];
+                $new_quantity = $current_quantity - $invoice_quantity;
+                $product->quantity = $new_quantity;
+                $product->save();
+            }
+
+            $sale_content = new Content;
+            $sale_content->transaction_type = "SalesOrder";
+            $sale_content->item_number = $i['item_number'];
+            $sale_content->description = $i['description'];
+            $sale_content->original_price = $i['original_price'];
+            $sale_content->selling_price = $i['selling_price'];
+            $sale_content->quantity = $i['quantity'];
+            $sale_content->sub_total = $i['sub_total'];
+            $sale_content->transaction_id = $sale->transaction_id;
+            $sale_content->checked = $i["checked"];
+            $sale_content->save();
+
         }
-        
+       
         return response()->json([
             'data' => $invoice
         ]);

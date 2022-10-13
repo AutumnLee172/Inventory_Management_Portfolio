@@ -192,7 +192,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         original_price: '',
         selling_price: '',
         quantity: '',
-        sub_total: ''
+        sub_total: '',
+        checked: ''
       }],
       displayimage: null,
       perPage: 10,
@@ -249,7 +250,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         original_price: '',
         selling_price: '',
         quantity: '',
-        sub_total: ''
+        sub_total: '',
+        checked: '0'
       });
     },
     removeItem: function removeItem(index) {
@@ -282,7 +284,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             original_price: r.data.data.original_price,
             selling_price: r.data.data.selling_price,
             quantity: 0,
-            sub_total: 0
+            sub_total: 0,
+            checked: '0'
           });
 
           _this4.calculateTotal();
@@ -305,7 +308,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         original_price: product.original_price,
         selling_price: product.selling_price,
         quantity: product.quantity,
-        sub_total: subtotal
+        sub_total: subtotal,
+        checked: '0'
       });
       this.calculateTotal();
     },
@@ -704,7 +708,10 @@ var render = function () {
                           _c(
                             "b-form-select",
                             {
-                              attrs: { id: "item_number" },
+                              attrs: {
+                                id: "item_number",
+                                disabled: item.checked == "1",
+                              },
                               on: {
                                 change: function ($event) {
                                   return _vm.findItem(item.item_number, index)
@@ -829,6 +836,7 @@ var render = function () {
                               id: "selling_price",
                               type: "number",
                               step: "0.01",
+                              disabled: item.checked == "1",
                             },
                             on: {
                               change: function ($event) {
@@ -862,7 +870,11 @@ var render = function () {
                         },
                         [
                           _c("b-form-input", {
-                            attrs: { id: "quantity", type: "number" },
+                            attrs: {
+                              id: "quantity",
+                              type: "number",
+                              disabled: item.checked == "1",
+                            },
                             on: {
                               change: function ($event) {
                                 return _vm.calculateSubtotal(index, item)
@@ -933,7 +945,11 @@ var render = function () {
                             {
                               staticClass: "mx-auto",
                               staticStyle: { display: "block" },
-                              attrs: { id: "remove_button", variant: "danger" },
+                              attrs: {
+                                id: "remove_button",
+                                variant: "danger",
+                                disabled: item.checked == "1",
+                              },
                               on: {
                                 click: function ($event) {
                                   return _vm.removeItem(index)

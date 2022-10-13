@@ -18,19 +18,21 @@
                                 </b-form-select>
                                 <b-form-input class="sr-only" id="customer_name" v-model="form.customer_name"
                                     name="customer_name"></b-form-input>
-                                    <b-form-input class="sr-only" id="customer_id" v-model="form.customer_id"
+                                <b-form-input class="sr-only" id="customer_id" v-model="form.customer_id"
                                     name="customer_id"></b-form-input>
                             </b-form-group>
                         </b-col>
                         <b-col md="6">
                             <b-form-group label="Phone Number" label-for="phone_number">
-                                <b-form-input id="phone_number" v-model="form.phone_number" name="phone_number" readonly>
+                                <b-form-input id="phone_number" v-model="form.phone_number" name="phone_number"
+                                    readonly>
                                 </b-form-input>
                             </b-form-group>
                         </b-col>
                         <b-col md="6">
                             <b-form-group label="Address" label-for="address">
-                                <b-form-input id="address" v-model="form.address" name="address" readonly></b-form-input>
+                                <b-form-input id="address" v-model="form.address" name="address" readonly>
+                                </b-form-input>
                             </b-form-group>
                         </b-col>
                         <b-col md="6">
@@ -45,20 +47,23 @@
                         <b-col md="4">
                             <b-row class="px-1">
                                 <b-col md="1">
-                            <b-form-checkbox type="checkbox" size="lg" value="1" unchecked-value="0" v-model="item.checked" @change="calculateSubtotal(index, item)"></b-form-checkbox>
-                        </b-col>
-                        <b-col>
-                            <b-form-group label="Item Number" label-for="item_number" class="small-font">
-                                <b-form-select id="item_number" v-model="item.item_number" disabled
-                                    @change="findItem(item.item_number, index)">
-                                    <b-form-select-option v-for="(product, p) in products" :value="product.item_number"
-                                        id="item_number" name="item_number" v-bind:key="p" class="mb-2 mr-sm-2 mb-sm-0">
-                                        {{
-                                        product.item_number }} </b-form-select-option>
-                                </b-form-select>
-                            </b-form-group>
-                        </b-col>
-                        </b-row>
+                                    <b-form-checkbox type="checkbox" size="lg" value="1" unchecked-value="0"
+                                        v-model="item.checked" @change="calculateSubtotal(index, item)">
+                                    </b-form-checkbox>
+                                </b-col>
+                                <b-col>
+                                    <b-form-group label="Item Number" label-for="item_number" class="small-font">
+                                        <b-form-select id="item_number" v-model="item.item_number" disabled
+                                            @change="findItem(item.item_number, index)">
+                                            <b-form-select-option v-for="(product, p) in products"
+                                                :value="product.item_number" id="item_number" name="item_number"
+                                                v-bind:key="p" class="mb-2 mr-sm-2 mb-sm-0">
+                                                {{
+                                                product.item_number }} </b-form-select-option>
+                                        </b-form-select>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
                         </b-col>
                         <b-col md="4">
                             <b-form-group label="Description" label-for="description" class="small-font">
@@ -72,8 +77,8 @@
                         </b-col>
                         <b-col md="1">
                             <b-form-group label="Selling $" label-for="selling_price" class="small-font">
-                                <b-form-input id="selling_price" v-model="item.selling_price" type="number" step="0.01" readonly
-                                    @change="calculateSubtotal(index, item)"></b-form-input>
+                                <b-form-input id="selling_price" v-model="item.selling_price" type="number" step="0.01"
+                                    readonly @change="calculateSubtotal(index, item)"></b-form-input>
                             </b-form-group>
                         </b-col>
                         <b-col md="1">
@@ -98,7 +103,7 @@
                         </b-col>
                         <b-col md="6">
                             <b-form-group label="Discount" label-for="discount">
-                                <b-form-input id="discount" v-model="form.discount" name="discount" 
+                                <b-form-input id="discount" v-model="form.discount" name="discount"
                                     @change="calculateTotal"></b-form-input>
                             </b-form-group>
                         </b-col>
@@ -132,7 +137,7 @@
                         </div>
                     </b-button>
 
-                    <b-form-input id="cart" v-model="form.cart" name="cart" class="" readonly>
+                    <b-form-input id="cart" v-model="form.cart" name="cart" class="sr-only" readonly>
                     </b-form-input>
                 </form>
             </div>
@@ -175,7 +180,7 @@ export default {
         this.fetchCustomer()
         this.fetchProducts()
         this.getClearFormObject()
-        if(this.id){
+        if (this.id) {
             this.getinvoiceData()
         }
     },
@@ -237,7 +242,7 @@ export default {
                 .get(`/products/find/${itemNumber}`)
                 .then((r) => {
                     if (r.data && r.data.data) {
-                        this.items.splice(index, 1, { item_number: itemNumber, description: r.data.data.description, original_price: r.data.data.original_price, selling_price: r.data.data.selling_price, quantity: 0, sub_total: 0, checked:product.checked })
+                        this.items.splice(index, 1, { item_number: itemNumber, description: r.data.data.description, original_price: r.data.data.original_price, selling_price: r.data.data.selling_price, quantity: 0, sub_total: 0, checked: product.checked })
                         this.calculateTotal()
                     }
                 })
@@ -253,7 +258,7 @@ export default {
             var sellingPrice = parseFloat(product.selling_price)
             var number = parseFloat(product.quantity)
             var subtotal = sellingPrice * number
-            this.items.splice(index, 1, { item_number: product.item_number, description: product.description, original_price: product.original_price, selling_price: product.selling_price, quantity: product.quantity, sub_total: subtotal, checked:product.checked })
+            this.items.splice(index, 1, { item_number: product.item_number, description: product.description, original_price: product.original_price, selling_price: product.selling_price, quantity: product.quantity, sub_total: subtotal, checked: product.checked })
             this.calculateTotal()
         },
         calculateTotal() {
@@ -263,9 +268,9 @@ export default {
             const itemsclone = this.items
             var i = 0
             for (i = 0; i < itemsclone.length; i++) {
-                if(itemsclone[i].checked == "1"){
+                if (itemsclone[i].checked == "1") {
                     this.form.total += parseFloat(itemsclone[i].sub_total)
-                }              
+                }
             }
             this.form.net = parseFloat(this.form.total) - parseFloat(this.form.discount)
             this.form.balance = parseFloat(this.form.net) - parseFloat(this.form.deposit)
@@ -289,33 +294,39 @@ export default {
         submit() {
             this.calculateTotal()
             this.isLoading = true
-            let method = 'post'
-            let url = '/sales/new'
 
-            if(this.id){
-                url = `/sales/edit/${this.id}`
-            }
+            this.$swal.fire({
+                title: 'Are you sure to invoice this sales order?',
+                showCancelButton: true,
+                confirmButtonText: 'Confirm',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                console.log(this.form)
+                    let method = 'post'
+                    let url = `/sales/toinvoice/${this.id}`
+                    axios({
+                        method,
+                        url,
+                        data: this.form
+                    }).then(r => {
+                        this.isLoading = false;
+                        this.$swal('Successfully invoiced');
+                        this.$router.push('/sales') 
 
-            axios({
-                method,
-                url,
-                data: this.form
-            }).then(r => {
-                if (!this.id && r.data.data.id) {
-                    this.$swal('Successfully Created');
-                }else {
-                    this.$swal('Successfully updated');
+                    }).catch(e => {
+                        this.isLoading = false;
+                        this.$swal('An error has ocured' + e);
+                       // this.$router.push('/sales') 
+                    });
+                }else{
+                    this.isLoading = false;
+                    return;
                 }
-                this.isLoading = false;
-                this.$router.push('/sales') 
-            }).catch(e => {
-                this.$swal('An error has ocured' + e);
-                this.isLoading = false;
-            });
+            })
         },
-        getinvoiceData(){
+        getinvoiceData() {
             axios
-                .get(`/sales/get/${this.id}`)
+                .get(`/sales/getCheckout/${this.id}`)
                 .then((r) => {
                     if (r.data && r.data.data) {
                         this.form = r.data.data;
@@ -336,14 +347,7 @@ export default {
                     });
                 });
         },
-        addtoCart(index, product){
-            if(this.items[index].checked == 0){
-                this.items.splice(index, 1, { item_number: product.item_number, description: product.description, original_price: product.original_price, selling_price: product.selling_price, quantity: product.quantity, sub_total: product.subtotal, checked:1 })
-            }else{
-                this.items.splice(index, 1, { item_number: product.item_number, description: product.description, original_price: product.original_price, selling_price: product.selling_price, quantity: product.quantity, sub_total: product.subtotal, checked:0 })
-            }
-            
-        }
+
     },
     watch: {
         selectedProduct() {
@@ -356,7 +360,6 @@ export default {
         },
         items: {
             handler: function () {
-                console.log(this.items)
                 this.form.cart = this.items
             },
             deep: true

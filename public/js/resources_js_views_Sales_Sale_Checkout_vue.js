@@ -157,6 +157,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Sale_Checkout",
@@ -327,37 +332,41 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       this.calculateTotal();
       this.isLoading = true;
-      var method = 'post';
-      var url = '/sales/new';
+      this.$swal.fire({
+        title: 'Are you sure to invoice this sales order?',
+        showCancelButton: true,
+        confirmButtonText: 'Confirm'
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          console.log(_this5.form);
+          var method = 'post';
+          var url = "/sales/toinvoice/".concat(_this5.id);
+          axios__WEBPACK_IMPORTED_MODULE_0___default()({
+            method: method,
+            url: url,
+            data: _this5.form
+          }).then(function (r) {
+            _this5.isLoading = false;
 
-      if (this.id) {
-        url = "/sales/edit/".concat(this.id);
-      }
+            _this5.$swal('Successfully invoiced');
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default()({
-        method: method,
-        url: url,
-        data: this.form
-      }).then(function (r) {
-        if (!_this5.id && r.data.data.id) {
-          _this5.$swal('Successfully Created');
+            _this5.$router.push('/sales');
+          })["catch"](function (e) {
+            _this5.isLoading = false;
+
+            _this5.$swal('An error has ocured' + e); // this.$router.push('/sales') 
+
+          });
         } else {
-          _this5.$swal('Successfully updated');
+          _this5.isLoading = false;
+          return;
         }
-
-        _this5.isLoading = false;
-
-        _this5.$router.push('/sales');
-      })["catch"](function (e) {
-        _this5.$swal('An error has ocured' + e);
-
-        _this5.isLoading = false;
       });
     },
     getinvoiceData: function getinvoiceData() {
       var _this6 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get("/sales/get/".concat(this.id)).then(function (r) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get("/sales/getCheckout/".concat(this.id)).then(function (r) {
         if (r.data && r.data.data) {
           _this6.form = r.data.data;
           _this6.selectedCustomer = _this6.form.customer_id;
@@ -375,29 +384,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           autoHideDelay: 5000
         });
       });
-    },
-    addtoCart: function addtoCart(index, product) {
-      if (this.items[index].checked == 0) {
-        this.items.splice(index, 1, {
-          item_number: product.item_number,
-          description: product.description,
-          original_price: product.original_price,
-          selling_price: product.selling_price,
-          quantity: product.quantity,
-          sub_total: product.subtotal,
-          checked: 1
-        });
-      } else {
-        this.items.splice(index, 1, {
-          item_number: product.item_number,
-          description: product.description,
-          original_price: product.original_price,
-          selling_price: product.selling_price,
-          quantity: product.quantity,
-          sub_total: product.subtotal,
-          checked: 0
-        });
-      }
     }
   },
   watch: {
@@ -409,7 +395,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     items: {
       handler: function handler() {
-        console.log(this.items);
         this.form.cart = this.items;
       },
       deep: true
@@ -798,7 +783,7 @@ var render = function () {
                                         },
                                         [
                                           _vm._v(
-                                            "\n                                    " +
+                                            "\n                                            " +
                                               _vm._s(product.item_number) +
                                               " "
                                           ),
@@ -1176,6 +1161,7 @@ var render = function () {
             ),
             _vm._v(" "),
             _c("b-form-input", {
+              staticClass: "sr-only",
               attrs: { id: "cart", name: "cart", readonly: "" },
               model: {
                 value: _vm.form.cart,

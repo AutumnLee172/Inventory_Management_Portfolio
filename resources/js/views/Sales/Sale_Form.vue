@@ -44,7 +44,7 @@
                     <b-row class="px-1" v-for="(item, index) in items" v-bind:key="index">
                         <b-col md="3">
                             <b-form-group label="Item Number" label-for="item_number" class="small-font">
-                                <b-form-select id="item_number" v-model="item.item_number"
+                                <b-form-select id="item_number" v-model="item.item_number" :disabled="item.checked == '1'"
                                     @change="findItem(item.item_number, index)">
                                     <b-form-select-option v-for="(product, p) in products" :value="product.item_number"
                                         id="item_number" name="item_number" v-bind:key="p" class="mb-2 mr-sm-2 mb-sm-0">
@@ -65,13 +65,13 @@
                         </b-col>
                         <b-col md="1">
                             <b-form-group label="Selling $" label-for="selling_price" class="small-font">
-                                <b-form-input id="selling_price" v-model="item.selling_price" type="number" step="0.01"
+                                <b-form-input id="selling_price" v-model="item.selling_price" type="number" step="0.01" :disabled="item.checked == '1'"
                                     @change="calculateSubtotal(index, item)"></b-form-input>
                             </b-form-group>
                         </b-col>
                         <b-col md="1">
                             <b-form-group label="Quantity" label-for="quantity" class="small-font">
-                                <b-form-input id="quantity" v-model="item.quantity" type="number"
+                                <b-form-input id="quantity" v-model="item.quantity" type="number" :disabled="item.checked == '1'"
                                     @change="calculateSubtotal(index, item)"></b-form-input>
                             </b-form-group>
                         </b-col>
@@ -82,7 +82,7 @@
                         </b-col>
                         <b-col md="1">
                             <b-form-group label="Remove" label-for="remove_button" class="text-center small-font">
-                                <b-button id="remove_button" variant="danger" class="mx-auto" style="display: block;"
+                                <b-button id="remove_button" variant="danger" class="mx-auto" style="display: block;" :disabled="item.checked == '1'"
                                     @click="removeItem(index)">
                                     <b-icon icon="x-circle" font-scale="1"></b-icon>
                                 </b-button>
@@ -172,7 +172,7 @@ export default {
             products: [],
             selectedProduct: null,
             form: this.getClearFormObject(),
-            items: [{ item_number: '', description: '', original_price: '', selling_price: '', quantity: '', sub_total: '' }],
+            items: [{ item_number: '', description: '', original_price: '', selling_price: '', quantity: '', sub_total: '', checked: '' }],
             displayimage: null,
             perPage: 10,
             currentPage: 1
@@ -224,7 +224,7 @@ export default {
         },
         addItem() {
             this.items.push({
-                item_number: '', description: '', original_price: '', selling_price: '', quantity: '', sub_total: ''
+                item_number: '', description: '', original_price: '', selling_price: '', quantity: '', sub_total: '', checked: '0'
             })
         },
         removeItem(index) {
@@ -253,7 +253,7 @@ export default {
                 .get(`/products/find/${itemNumber}`)
                 .then((r) => {
                     if (r.data && r.data.data) {
-                        this.items.splice(index, 1, { item_number: itemNumber, description: r.data.data.description, original_price: r.data.data.original_price, selling_price: r.data.data.selling_price, quantity: 0, sub_total: 0 })
+                        this.items.splice(index, 1, { item_number: itemNumber, description: r.data.data.description, original_price: r.data.data.original_price, selling_price: r.data.data.selling_price, quantity: 0, sub_total: 0, checked: '0' })
                         this.calculateTotal()
                     }
                 })
@@ -269,7 +269,7 @@ export default {
             var sellingPrice = parseFloat(product.selling_price)
             var number = parseFloat(product.quantity)
             var subtotal = sellingPrice * number
-            this.items.splice(index, 1, { item_number: product.item_number, description: product.description, original_price: product.original_price, selling_price: product.selling_price, quantity: product.quantity, sub_total: subtotal })
+            this.items.splice(index, 1, { item_number: product.item_number, description: product.description, original_price: product.original_price, selling_price: product.selling_price, quantity: product.quantity, sub_total: subtotal, checked: '0' })
             this.calculateTotal()
         },
         calculateTotal() {

@@ -85,7 +85,6 @@ export default {
                 { key: 'total', sortable: true },
                 { key: 'deposit', sortable: true },
                 { key: 'created_date', sortable: true },
-                { key: 'status', sortable: true },
                 { key: 'Edit', sortable: false }
             ]
         }

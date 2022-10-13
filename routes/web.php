@@ -62,11 +62,12 @@ Route::prefix('/sales')->group(function () {
     Route::post('new', 'App\Http\Controllers\SalesController@create');
     Route::get('/search/{keywords}', 'App\Http\Controllers\SalesController@search');
     Route::post('/edit/{id}', 'App\Http\Controllers\SalesController@update');
-    Route::get('/toinvoice/{id}', 'App\Http\Controllers\SalesController@toinvoice');
+    Route::post('/toinvoice/{id}', 'App\Http\Controllers\SalesController@toinvoice');
     Route::get('', 'App\Http\Controllers\SalesController@index');
     Route::get('/createPDF/{id}', 'App\Http\Controllers\SalesController@createPDF');
     Route::post('/destroy/{id}', 'App\Http\Controllers\SalesController@destroy');
     Route::get('/get/{id}', 'App\Http\Controllers\SalesController@getSale');
+    Route::get('/getCheckout/{id}', 'App\Http\Controllers\SalesController@getSaleforcheckout');
 });
 
 Route::prefix('/cash')->group(function () {

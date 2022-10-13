@@ -107,9 +107,6 @@ __webpack_require__.r(__webpack_exports__);
         key: 'created_date',
         sortable: true
       }, {
-        key: 'status',
-        sortable: true
-      }, {
         key: 'Edit',
         sortable: false
       }]
