@@ -51,11 +51,14 @@ Route::prefix('/customers')->group(function () {
 });
 
 Route::prefix('/invoices')->group(function () {
-    //Route::post('new', 'App\Http\Controllers\InvoicesController@create');
+    Route::post('new', 'App\Http\Controllers\InvoicesController@create');
     Route::get('/search/{keywords}', 'App\Http\Controllers\InvoicesController@search');
     Route::post('complete/{id}', 'App\Http\Controllers\InvoicesController@complete');
     Route::get('', 'App\Http\Controllers\InvoicesController@index');
     Route::get('/createPDF/{id}', 'App\Http\Controllers\InvoicesController@createPDF');
+    Route::post('/destroy/{id}', 'App\Http\Controllers\InvoicesController@destroy');
+    Route::get('/get/{id}', 'App\Http\Controllers\InvoicesController@getInvoice');
+    Route::post('/edit/{id}', 'App\Http\Controllers\InvoicesController@update');
 });
 
 Route::prefix('/sales')->group(function () {

@@ -54,6 +54,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Invoices",
@@ -164,6 +178,27 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Error',
           autoHideDelay: 5000
         });
+      });
+    },
+    destroy: function destroy($id) {
+      var _this4 = this;
+
+      this.$swal.fire({
+        title: 'Are you sure to delete this?',
+        showCancelButton: true,
+        confirmButtonText: 'Confirm'
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          axios__WEBPACK_IMPORTED_MODULE_0___default().post("/invoices/destroy/".concat($id)).then(function (r) {
+            _this4.$swal('Successfully deleted');
+
+            _this4.getData();
+          })["catch"](function (e) {
+            _this4.$swal('An error has ocured' + e);
+
+            _this4.getData();
+          });
+        }
       });
     }
   },
@@ -279,7 +314,21 @@ var render = function () {
         "b-row",
         { staticClass: "my-3" },
         [
-          _c("b-col", { attrs: { sm: "9" } }),
+          _c(
+            "b-col",
+            { attrs: { sm: "3" } },
+            [
+              _c(
+                "router-link",
+                { attrs: { to: "/invoices/new" } },
+                [_c("b-button", [_vm._v("Add new")])],
+                1
+              ),
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("b-col", { attrs: { sm: "6" } }),
           _vm._v(" "),
           _c(
             "b-col",
@@ -382,6 +431,73 @@ var render = function () {
                             icon: "file-earmark-arrow-down",
                             "font-scale": "1",
                           },
+                        }),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    row.item.status == "Pending"
+                      ? _c(
+                          "router-link",
+                          {
+                            attrs: {
+                              to: {
+                                name: "invoices.edit",
+                                params: { id: row.item.id },
+                              },
+                            },
+                          },
+                          [
+                            _c(
+                              "b-button",
+                              { attrs: { variant: "primary" } },
+                              [
+                                _c("b-icon", {
+                                  attrs: {
+                                    icon: "pencil-square",
+                                    "font-scale": "1",
+                                  },
+                                }),
+                              ],
+                              1
+                            ),
+                          ],
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    row.item.status == "Completed"
+                      ? _c(
+                          "b-button",
+                          { attrs: { variant: "primary", disabled: "" } },
+                          [
+                            _c("b-icon", {
+                              attrs: {
+                                icon: "pencil-square",
+                                "font-scale": "1",
+                              },
+                            }),
+                          ],
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "b-button",
+                      {
+                        attrs: {
+                          variant: "danger",
+                          disabled: row.item.status == "Completed",
+                        },
+                        on: {
+                          click: function ($event) {
+                            return _vm.destroy((_vm.id = row.item.id))
+                          },
+                        },
+                      },
+                      [
+                        _c("b-icon", {
+                          attrs: { icon: "trash", "font-scale": "1" },
                         }),
                       ],
                       1

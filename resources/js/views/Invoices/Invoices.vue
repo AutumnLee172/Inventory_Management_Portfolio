@@ -1,12 +1,15 @@
 <template>
     <div class="container-fluid py-4 px-4">
         <b-row class="my-3">
-            <b-col sm="9"></b-col>
+            <b-col sm="3">
+            <router-link to="/invoices/new"><b-button>Add new</b-button></router-link>
+        </b-col>
+            <b-col sm="6"></b-col>
             <b-col sm="3">
                 <b-form-input v-model="search" placeholder="Search"></b-form-input>
             </b-col>
         </b-row>
-        <!-- <router-link to="/invoices/new"><b-button>Add new</b-button></router-link> -->
+        
         
         <div class="card mb-4">
             <div class="card-header">
@@ -23,6 +26,17 @@
                     </b-button>
                     <b-button variant="info" @click="generatePDF(row.item.id)">
                         <b-icon icon="file-earmark-arrow-down" font-scale="1"></b-icon>
+                    </b-button>
+                    <router-link :to="{name:'invoices.edit', params: {id: row.item.id}}" v-if="row.item.status == 'Pending'">
+                    <b-button variant="primary" >
+                        <b-icon icon="pencil-square" font-scale="1"></b-icon>
+                    </b-button>
+                    </router-link>
+                    <b-button variant="primary" disabled v-if="row.item.status == 'Completed'">
+                        <b-icon icon="pencil-square" font-scale="1"></b-icon>
+                    </b-button>
+                    <b-button variant="danger" @click="destroy(id=row.item.id)" :disabled="row.item.status == 'Completed'">
+                        <b-icon icon="trash" font-scale="1"></b-icon>
                     </b-button>
                 </template>
                 <template #table-busy>
@@ -136,6 +150,24 @@ export default {
                         autoHideDelay: 5000
                     });
                 });
+        },
+        destroy($id) {
+            this.$swal.fire({
+                title: 'Are you sure to delete this?',
+                showCancelButton: true,
+                confirmButtonText: 'Confirm',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.post(`/invoices/destroy/${$id}`).then(r => {
+                        this.$swal('Successfully deleted');
+                        this.getData();
+
+                    }).catch(e => {
+                        this.$swal('An error has ocured' + e);
+                        this.getData();
+                    });
+                }
+            })
         },
     },
     watch: {

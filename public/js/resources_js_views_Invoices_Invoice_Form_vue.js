@@ -222,6 +222,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.fetchCustomer();
     this.fetchProducts();
     this.getClearFormObject();
+
+    if (this.id) {
+      this.getOrderData();
+    }
   },
   methods: {
     fetchCustomer: function fetchCustomer() {
@@ -360,12 +364,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.isLoading = true;
       var method = 'post';
       var url = '/invoices/new';
+
+      if (this.id) {
+        url = "/invoices/edit/".concat(this.id);
+      }
+
       axios__WEBPACK_IMPORTED_MODULE_0___default()({
         method: method,
         url: url,
         data: this.form
       }).then(function (r) {
-        _this5.$swal('Successfully Created');
+        if (!_this5.id && r.data.data.id) {
+          _this5.$swal('Successfully Created');
+        } else {
+          _this5.$swal('Successfully updated');
+        }
 
         _this5.isLoading = false;
 
@@ -374,6 +387,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this5.$swal('An error has ocured' + e);
 
         _this5.isLoading = false;
+      });
+    },
+    getOrderData: function getOrderData() {
+      var _this6 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get("/invoices/get/".concat(this.id)).then(function (r) {
+        if (r.data && r.data.data) {
+          _this6.form = r.data.data;
+          _this6.selectedCustomer = _this6.form.customer_id;
+          _this6.items = r.data.items;
+        }
+      })["catch"](function (err) {
+        // this.isLoading = false;
+        _this6.$bvToast.toast(err, {
+          title: 'Error',
+          autoHideDelay: 5000
+        });
       });
     }
   },

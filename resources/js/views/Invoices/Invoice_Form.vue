@@ -190,6 +190,9 @@ export default {
         this.fetchCustomer()
         this.fetchProducts()
         this.getClearFormObject()
+        if(this.id){
+            this.getOrderData()
+        }
     },
     methods: {
         fetchCustomer() {
@@ -311,12 +314,20 @@ export default {
             let method = 'post'
             let url = '/invoices/new'
 
+              if(this.id){
+                url = `/invoices/edit/${this.id}`
+            }
+
             axios({
                 method,
                 url,
                 data: this.form
             }).then(r => {
-                this.$swal('Successfully Created');
+                if (!this.id && r.data.data.id) {
+                    this.$swal('Successfully Created');
+                }else {
+                    this.$swal('Successfully updated');
+                }
                 this.isLoading = false;
                 this.$router.push('/invoices') 
             }).catch(e => {
@@ -324,6 +335,24 @@ export default {
                 this.isLoading = false;
             });
 
+        },
+        getOrderData(){
+            axios
+                .get(`/invoices/get/${this.id}`)
+                .then((r) => {
+                    if (r.data && r.data.data) {
+                        this.form = r.data.data;
+                        this.selectedCustomer = this.form.customer_id;
+                        this.items = r.data.items;
+                    }
+                })
+                .catch((err) => {
+                    // this.isLoading = false;
+                    this.$bvToast.toast(err, {
+                        title: 'Error',
+                        autoHideDelay: 5000
+                    });
+                });
         }
     },
     watch: {

@@ -115,10 +115,8 @@
     },
     data () {
       return {
-        // defaultChart: {
-        //   chartData: null,
-        //   extraOptions: chartConfig.chartOptionsMain
-        // }
+        todayProfit: 0,
+
       }
     },
     computed: {

@@ -43,6 +43,12 @@ export default new Router({
       component: () => import('./views/Invoices/Invoice_Form.vue')
     },
     {
+      path: '/invoices/edit/:id',
+      name: 'invoices.edit',
+      component: () => import('./views/Invoices/Invoice_Form.vue'),
+      props: true
+    },
+    {
       path: '/Sales',
       name: 'sales',
       component: () => import('./views/Sales/Sales.vue')
