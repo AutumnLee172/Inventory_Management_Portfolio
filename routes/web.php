@@ -20,6 +20,7 @@ Route::get('/', function () {
 Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/getStats', 'App\Http\Controllers\HomeController@getStats');
 
 Route::prefix('/user')->group(function () {
     Route::get('', 'App\Http\Controllers\UserController@show');

@@ -8,12 +8,13 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Money</p>
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Revenue of Today</p>
                     <h5 class="font-weight-bolder">
-                      $53,000
+                     MYR {{ items.TodayRevenue }}
                     </h5>
                     <p class="mb-0">
-                      <span class="text-success text-sm font-weight-bolder">+55%</span>
+                      <span class="text-success text-sm font-weight-bolder" v-if="items.RevenueVs >= 0">+{{items.RevenueVs}}%</span>
+                      <span class="text-danger text-sm font-weight-bolder" v-else-if="items.RevenueVs < 0">{{items.RevenueVs}}%</span>
                       since yesterday
                     </p>
                   </div>
@@ -33,13 +34,13 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Users</p>
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Registered Customers</p>
                     <h5 class="font-weight-bolder">
-                      2,300
+                      {{ items.thismonthuserstotal }}
                     </h5>
                     <p class="mb-0">
-                      <span class="text-success text-sm font-weight-bolder">+3%</span>
-                      since last week
+                      <span class="text-success text-sm font-weight-bolder">+ {{ items.lastmonthuserstotal }} customers</span>
+                      since last month
                     </p>
                   </div>
                 </div>
@@ -58,13 +59,14 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-uppercase font-weight-bold">New Clients</p>
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Gross Profit Today</p>
                     <h5 class="font-weight-bolder">
-                      +3,462
+                      MYR {{ items.grosstoday }}
                     </h5>
                     <p class="mb-0">
-                      <span class="text-danger text-sm font-weight-bolder">-2%</span>
-                      since last quarter
+                      <span class="text-success text-sm font-weight-bolder" v-if="items.GrossVs >= 0">+{{ items.GrossVs }}%</span>
+                      <span class="text-danger text-sm font-weight-bolder" v-else-if="items.GrossVs < 0">{{ items.GrossVs }}%</span>
+                      since yesterday
                     </p>
                   </div>
                 </div>
@@ -83,12 +85,12 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Sales</p>
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Uncollected Sales</p>
                     <h5 class="font-weight-bolder">
-                      $103,430
+                      MYR {{ items.uncollectedMoney }}
                     </h5>
                     <p class="mb-0">
-                      <span class="text-success text-sm font-weight-bolder">+5%</span> than last month
+                      <span class="text-success text-sm font-weight-bolder">Amount of uncollected balance</span> 
                     </p>
                   </div>
                 </div>
@@ -115,14 +117,49 @@
     },
     data () {
       return {
-        todayProfit: 0,
+        items: this.getStatisticObjects(), 
 
       }
     },
     computed: {
       
     },
+    created() {
+        this.getData();
+    },
     methods: {
+        getStatisticObjects() {
+            return {
+               TodayRevenue: 0,
+               RevenueVs: 0,
+               thismonthuserstotal: 0,
+               lastmonthuserstotal: 0,
+               grosstoday: 0,
+               GrossVs: 0,
+               uncollectedMoney: 0,
+            }
+        },
+        getData() {
+            axios
+                .get(`/getStats`)
+                .then((r) => {
+                    if (r.data) {
+                        this.items.TodayRevenue = r.data.RevenueToday;
+                        this.items.RevenueVs = r.data.RevenueVs;
+                        this.items.thismonthuserstotal = r.data.thismonthuserstotal;
+                        this.items.lastmonthuserstotal = r.data.lastmonthuserstotal;
+                        this.items.grosstoday = r.data.grosstoday;
+                        this.items.GrossVs = r.data.GrossVs;
+                        this.items.uncollectedMoney = r.data.uncollectedMoney;
+                    }
+                })
+                .catch((err) => {
+                    this.$bvToast.toast(err, {
+                        title: 'Error',
+                        autoHideDelay: 5000
+                    });
+                });
+        },
      
     }
   }

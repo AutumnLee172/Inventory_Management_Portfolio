@@ -151,7 +151,7 @@ class CashController extends Controller
         $items = $request->get('cart');
         foreach($items as $i){
             $content = new Content;
-            $content->transaction_type = "SalesOrder";
+            $content->transaction_type = "Cash Sale";
             $content->item_number = $i['item_number'];
             $content->description = $i['description'];
             $content->original_price = $i['original_price'];
