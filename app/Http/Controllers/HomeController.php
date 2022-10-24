@@ -58,7 +58,9 @@ class HomeController extends Controller
             $RevenueYesterday = $RevenueYesterday + $CashsalesRevenue;
         }
         $RevenueVs = 0;
-        $RevenueVs = (($RevenueToday - $RevenueYesterday) / $RevenueYesterday) * 100;
+        if($RevenueYesterday !== 0){
+            $RevenueVs = (($RevenueToday - $RevenueYesterday) / $RevenueYesterday) * 100;
+        }       
 
         //totalNumberofRegisterCustomer
         $thismonthuserstotal = Customer::all()->count();
@@ -90,7 +92,10 @@ class HomeController extends Controller
             $profit = ($sellingPrice - $originalPrice) * $quantity;
             $grossytd = $grossytd + $profit;
         }
-        $GrossVs = (($grosstoday - $grossytd) / $grossytd) * 100;
+        $GrossVs = 0;
+        if($grossytd !== 0){
+            $GrossVs = (($grosstoday - $grossytd) / $grossytd) * 100;
+        }
 
         //Total Uncollected Cash Sale
         $contentsUncollected = Content::where('transaction_type','SalesOrder')->where(function ($q) {
