@@ -6,6 +6,7 @@ use App\Models\Cashsale;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Content;
+use App\Models\sale;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -37,11 +38,11 @@ class HomeController extends Controller
         $CashsalesToday = Cashsale::where('status', 'Completed')->whereDate('created_at', Carbon::today())->get();
         $RevenueToday = 0;
         foreach ($invoicesToday as $i) {
-            $invoiceRevenue = (float) $i->balance;
+            $invoiceRevenue = (float) $i->net;
             $RevenueToday = $RevenueToday + $invoiceRevenue;
         }
         foreach ($CashsalesToday as $c) {
-            $CashsalesRevenue = (float) $c->balance;
+            $CashsalesRevenue = (float) $c->net;
             $RevenueToday = $RevenueToday + $CashsalesRevenue;
         }
 
@@ -50,11 +51,11 @@ class HomeController extends Controller
         $CashsalesYesterday = Cashsale::where('status', 'Completed')->whereDate('created_at', Carbon::yesterday())->get();
         $RevenueYesterday = 0;
         foreach ($invoicesYesterday as $i) {
-            $invoiceRevenue = (float) $i->balance;
+            $invoiceRevenue = (float) $i->net;
             $RevenueYesterday = $RevenueYesterday + $invoiceRevenue;
         }
         foreach ($CashsalesYesterday as $c) {
-            $CashsalesRevenue = (float) $c->balance;
+            $CashsalesRevenue = (float) $c->net;
             $RevenueYesterday = $RevenueYesterday + $CashsalesRevenue;
         }
         $RevenueVs = 0;
@@ -106,7 +107,22 @@ class HomeController extends Controller
             $subtotal = (float) $c->sub_total;
             $uncollectedMoney = $uncollectedMoney + $subtotal;
         }
-        
+
+        //Table Data
+        $invoicesTable = Invoice::select('transaction_id', 'customer_name', 'net', 'created_date')->orderBy('id', 'desc')->take(2)->get();
+        $CashTable = Cashsale::select('transaction_id', 'customer_name', 'net', 'created_date')->orderBy('id', 'desc')->take(2)->get();
+        $SalesTable = Sale::select('transaction_id', 'customer_name', 'net', 'created_date')->orderBy('id', 'desc')->take(2)->get();
+        foreach($invoicesTable as $i){
+            $i->transaction_type = "Invoices";
+        }
+        foreach($CashTable as $c){
+            $c->transaction_type = "Cash Sale";
+        }
+        foreach($SalesTable as $s){
+            $s->transaction_type = "Sales Order";
+        }
+        $TableData = array_merge($invoicesTable->toArray(), $CashTable->toArray(), $SalesTable->toArray());
+
         $RevenueToday = number_format($RevenueToday, 2);
         $RevenueVs = number_format($RevenueVs, 2);
         $grosstoday = number_format($grosstoday, 2);
@@ -121,6 +137,50 @@ class HomeController extends Controller
             'grosstoday' => $grosstoday,
             'GrossVs' => $GrossVs,
             'uncollectedMoney' => $uncollectedMoney,
+            'TableData' => $TableData,
+        ]);
+    }
+
+    public function getChartData()
+    {
+        $InvoicesMonth = Invoice::selectRaw('sum(net) as sum')->selectRaw("DATE_FORMAT(created_at,'%M %Y') as months")->groupBy('months')->get();
+        $CashMonth = Cashsale::selectRaw('sum(net) as sum')->selectRaw("DATE_FORMAT(created_at,'%M %Y') as months")->groupBy('months')->get();
+        $RevenueMonth = [];
+        $RevenueMonthSum = [];
+        foreach($InvoicesMonth as $i){
+            foreach($CashMonth as $c){
+                if($c['months'] == $i['months']){
+                    $i['sum'] = $c['sum'] + $i['sum'];
+                }
+            }
+            array_push($RevenueMonthSum, $i['sum']);
+            array_push($RevenueMonth, $i['months']);
+        }
+
+        return response()->json([
+            'data' => $RevenueMonthSum,
+            'label' => $RevenueMonth,
+        ]);
+    }
+
+    public function getChartData2()
+    {
+        $InvoicesMonth = Invoice::selectRaw('count(id) as sum')->selectRaw("DATE_FORMAT(created_at,'%M %Y') as months")->groupBy('months')->get();
+        $CashMonth = Cashsale::selectRaw('count(id) as sum')->selectRaw("DATE_FORMAT(created_at,'%M %Y') as months")->groupBy('months')->get();
+        $NumberMonth = [];
+        $NumberOrder = [];
+        foreach($InvoicesMonth as $i){
+            foreach($CashMonth as $c){
+                if($c['months'] == $i['months']){
+                    $i['sum'] = $c['sum'] + $i['sum'];
+                }
+            }
+            array_push($NumberOrder, $i['sum']);
+            array_push($NumberMonth, $i['months']);
+        }
+        return response()->json([
+            'data' => $NumberOrder,
+            'label' => $NumberMonth,
         ]);
     }
 }

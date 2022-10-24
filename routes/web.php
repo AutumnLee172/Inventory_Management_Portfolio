@@ -21,6 +21,8 @@ Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/getStats', 'App\Http\Controllers\HomeController@getStats');
+Route::get('/getChartData', 'App\Http\Controllers\HomeController@getChartData');
+Route::get('/getChartData2', 'App\Http\Controllers\HomeController@getChartData2');
 
 Route::prefix('/user')->group(function () {
     Route::get('', 'App\Http\Controllers\UserController@show');
