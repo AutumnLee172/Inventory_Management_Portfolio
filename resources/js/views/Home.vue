@@ -13,10 +13,12 @@
                     MYR {{ items.TodayRevenue }}
                   </h5>
                   <p class="mb-0">
-                    <span class="text-success text-sm font-weight-bolder"
-                      v-if="items.RevenueVs >= 0">+{{items.RevenueVs}}%</span>
-                    <span class="text-danger text-sm font-weight-bolder"
-                      v-else-if="items.RevenueVs < 0">{{items.RevenueVs}}%</span>
+                    <span class="text-success text-sm font-weight-bolder" v-if="items.RevenueVs >= 0">+{{
+                        items.RevenueVs
+                    }}%</span>
+                    <span class="text-danger text-sm font-weight-bolder" v-else-if="items.RevenueVs < 0">{{
+                        items.RevenueVs
+                    }}%</span>
                     since yesterday
                   </p>
                 </div>
@@ -122,9 +124,7 @@
           </div>
           <div class="card-body p-3">
             <div class="chart">
-              <LineChart :chart-options="chartOptions" :chart-data="chartData" :chart-id="chartId"
-                :dataset-id-key="datasetIdKey" :plugins="plugins" :css-classes="cssClasses" :styles="styles"
-                :width="width" :height="height" />
+              <apexchart type="line" height="350" :options="chartOptions" :series="series"></apexchart>
             </div>
           </div>
         </div>
@@ -140,9 +140,7 @@
           </div>
           <div class="card-body p-3">
             <div class="chart">
-              <LineChart :chart-options="chartOptions" :chart-data="chartData2" :chart-id="chartId"
-                :dataset-id-key="datasetIdKey" :plugins="plugins" :css-classes="cssClasses" :styles="styles"
-                :width="width" :height="height" />
+              <apexchart type="line" height="350" :options="chartOptions2" :series="series2"></apexchart>
             </div>
           </div>
         </div>
@@ -158,8 +156,7 @@
             </div>
             <div class="table-responsive">
               <b-table striped hover :busy="isBusy" class="align-items-center mb-0" :fields="fields"
-                head-variant="light" :items="Tableitems" responsive="sm"
-                >
+                head-variant="light" :items="Tableitems" responsive="sm">
                 <template #table-busy>
                   <div class="text-center text-danger my-2">
                     <b-spinner variant="primary" class="align-middle"></b-spinner>
@@ -176,78 +173,20 @@
 </template>
   
 <script>
-import { Line as LineChart } from 'vue-chartjs'
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  LineElement,
-  LinearScale,
-  PointElement,
-  CategoryScale,
-  Plugin
-} from 'chart.js'
-
-ChartJS.register(
-  Title,
-  Tooltip,
-  LineElement,
-  LinearScale,
-  PointElement,
-  CategoryScale
-)
+import VueApexCharts from 'vue-apexcharts'
 
 // @ is an alias to /src
 // import * as chartConfig from '@/components/Charts/chart.config'
 export default {
   name: 'home',
   components: {
-    LineChart
+    apexchart: VueApexCharts,
   },
   props: {
-    chartId: {
-      type: String,
-      default: 'line-chart'
-    },
-    datasetIdKey: {
-      type: String,
-      default: 'label'
-    },
-    width: {
-      type: Number,
-      default: 400
-    },
-    height: {
-      type: Number,
-      default: 400
-    },
-    cssClasses: {
-      default: '',
-      type: String
-    },
-    styles: {
-      type: Object,
-      default: () => { }
-    },
-    plugins: {
-      type: Object,
-      default: () => { }
-    }
   },
   data() {
     return {
       items: this.getStatisticObjects(),
-      chartData: {
-        labels: ['January', 'February'],
-        datasets: [{ data: this.monthData }]
-      },
-      chartData2: {
-        labels: ['January', 'February'],
-        datasets: [{ data: this.monthData }]
-      },
-      chartOptions: {
-        responsive: true
-      },
       fields: [
         { key: 'transaction_id' },
         { key: 'customer_name' },
@@ -257,6 +196,10 @@ export default {
       ],
       isBusy: false,
       Tableitems: [],
+      series: [],
+      chartOptions: {},
+      series2: [],
+      chartOptions2: {},
     }
   },
   computed: {
@@ -306,9 +249,73 @@ export default {
         .get(`/getChartData`)
         .then((r) => {
           if (r.data) {
-            this.chartData = {
-              labels: r.data.label,
-              datasets: [{ data: r.data.data }]
+            this.series = [
+              {
+                name: "Invoice",
+                data: r.data.InvoiceData
+              },
+              {
+                name: "Cash Sales",
+                data: r.data.CashData
+              }
+            ];
+            this.chartOptions = {
+              chart: {
+                height: 350,
+                type: 'line',
+                dropShadow: {
+                  enabled: true,
+                  color: '#000',
+                  top: 18,
+                  left: 7,
+                  blur: 10,
+                  opacity: 0.2
+                },
+                zoom: {
+                  type: 'x',
+                  enabled: true,
+                  autoScaleYaxis: true
+                },
+                toolbar: {
+                  autoSelected: 'zoom'
+                }
+
+              },
+              colors: ['#5e72e4', '#fb8a40'],
+              dataLabels: {
+                enabled: true,
+              },
+              stroke: {
+                curve: 'smooth'
+              },
+              grid: {
+                borderColor: '#e7e7e7',
+                row: {
+                  colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                  opacity: 0.5
+                },
+              },
+              markers: {
+                size: 1
+              },
+              xaxis: {
+                categories: r.data.label,
+                title: {
+                  text: 'Month'
+                }
+              },
+              yaxis: {
+                title: {
+                  text: 'Sum of Net (MYR)'
+                }
+              },
+              legend: {
+                position: 'top',
+                horizontalAlign: 'right',
+                floating: true,
+                offsetY: -25,
+                offsetX: -5
+              }
             }
           }
         })
@@ -324,9 +331,73 @@ export default {
         .get(`/getChartData2`)
         .then((r) => {
           if (r.data) {
-            this.chartData2 = {
-              labels: r.data.label,
-              datasets: [{ data: r.data.data }]
+            this.series2 = [
+              {
+                name: "Invoice",
+                data: r.data.InvoiceData
+              },
+              {
+                name: "Cash Sales",
+                data: r.data.CashData
+              }
+            ];
+            this.chartOptions2 = {
+              chart: {
+                height: 350,
+                type: 'line',
+                dropShadow: {
+                  enabled: true,
+                  color: '#000',
+                  top: 18,
+                  left: 7,
+                  blur: 10,
+                  opacity: 0.2
+                },
+                zoom: {
+                  type: 'x',
+                  enabled: true,
+                  autoScaleYaxis: true
+                },
+                toolbar: {
+                  autoSelected: 'zoom'
+                }
+
+              },
+              colors: ['#5e72e4', '#fb8a40'],
+              dataLabels: {
+                enabled: true,
+              },
+              stroke: {
+                curve: 'smooth'
+              },
+              grid: {
+                borderColor: '#e7e7e7',
+                row: {
+                  colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                  opacity: 0.5
+                },
+              },
+              markers: {
+                size: 1
+              },
+              xaxis: {
+                categories: r.data.label,
+                title: {
+                  text: 'Month'
+                }
+              },
+              yaxis: {
+                title: {
+                  text: 'Number of Orders'
+                }
+              },
+              legend: {
+                position: 'top',
+                horizontalAlign: 'right',
+                floating: true,
+                offsetY: -25,
+                offsetX: -5
+              }
             }
           }
         })
