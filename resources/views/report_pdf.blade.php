@@ -37,6 +37,9 @@
             float: right;
             clear: both;
         }
+        .blockhalf{
+            width: 50%;
+        }
         .border {
             border: 1px solid;
             padding: 5px;
@@ -65,19 +68,19 @@
 </head>
 <body>
     <div>
-            <h2 class="center"> JAC LIGHT ENTERPRISE </h2>
-            <h5 class="center"> 11-13, Jalan Yang Kalsam, 30250 Ipoh Perak </h5>
+            <h2 class="center"> JAC LIGHT ENTERPRISE (IP0530129-W)</h2>
+            <h5 class="center"> 11-13, Jalan Yang Kalsam, 30250 Ipoh Perak (H/P: 0164124187) </h5>
 
             <hr/>
 
                 <h3> {{ $items[0]->transaction_type }} </h3>
-                <h5 class="righthandside">{{ $data->created_date }} </h5>  
-                <h5>Transaction ID: {{ $data->transaction_id }}</h5>               
-                <h5>Customer Name: {{ $data->customer_name }} </h5> 
-                <h5>Phone Number: {{ $data->phone_number }} </h5> 
-                <h5>Address: {{ $data->address }} </h5> 
-                <h5>Remark: {{ $data->remark }} </h5> 
-              
+                <h5 class="righthandside">{{ $data->created_date }} </h5>
+                <h5>Transaction ID: {{ $data->transaction_id }}</h5>
+                <h5>Customer Name: {{ $data->customer_name }} </h5>
+                <h5>Phone Number: {{ $data->phone_number }} </h5>
+                <h5 class="blockhalf">Address: {{ $data->address }} </h5>
+                <h5>Remark: {{ $data->remark }} </h5>
+
 
             <hr/>
             <br/>
@@ -119,8 +122,8 @@
                 </tr>
               </table>
             <div class="footer">For more information, please contact +60164124187</div>
-            
+
     </div>
-   
+
 </body>
 </html>

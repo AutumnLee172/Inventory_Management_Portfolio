@@ -27122,3 +27122,9 @@ pre[class*=language-] {
 .numberColumn{
   max-width: 100px;
 }
+.card {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+}
+

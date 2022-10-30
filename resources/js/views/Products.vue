@@ -99,6 +99,13 @@
 
 </template>
 
+<style>
+.card-header {
+    background-color: #fff;
+    border-bottom: none;
+}
+</style>
+
 <script>
 import axios from 'axios';
 
@@ -310,5 +317,4 @@ export default {
 }
 
 </script>
-    
-    
+

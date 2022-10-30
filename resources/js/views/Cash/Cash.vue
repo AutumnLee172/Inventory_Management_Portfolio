@@ -2,30 +2,33 @@
     <div class="container-fluid py-4 px-4">
         <b-row class="my-1">
             <b-col sm="2">
-                <router-link to="/Cash/new"><b-button>Add new</b-button></router-link>
+                <router-link to="/Cash/new">
+                    <b-button>Add new</b-button>
+                </router-link>
             </b-col>
             <b-col sm="7"></b-col>
             <b-col sm="3">
                 <b-form-input v-model="search" placeholder="Search"></b-form-input>
             </b-col>
         </b-row>
-        
+
         <div class="card mb-4">
             <div class="card-header">
                 <h2>Cash Sales table</h2>
             </div>
-            <b-table :busy="isBusy" class="table align-items-center mb-0" id="sales-table" :fields="fields" head-variant="light"
-                :items="items" sort-by="transaction_id" :sort-desc=true responsive="sm" :per-page="perPage" :current-page="currentPage">
+            <b-table :busy="isBusy" class="table align-items-center mb-0" id="sales-table" :fields="fields"
+                head-variant="light" :items="items" sort-by="transaction_id" :sort-desc=true responsive="sm"
+                :per-page="perPage" :current-page="currentPage">
                 <template #cell(Edit)="row">
                     <b-button variant="info" @click="generatePDF(row.item.id)">
                         <b-icon icon="file-earmark-arrow-down" font-scale="1"></b-icon>
                     </b-button>
-                    <router-link :to="{name:'cash.edit', params: {id: row.item.id}}">
-                    <b-button variant="primary">
-                        <b-icon icon="pencil-square" font-scale="1"></b-icon>
-                    </b-button>
+                    <router-link :to="{ name: 'cash.edit', params: { id: row.item.id } }">
+                        <b-button variant="primary">
+                            <b-icon icon="pencil-square" font-scale="1"></b-icon>
+                        </b-button>
                     </router-link>
-                    <b-button variant="danger" @click="destroy(id=row.item.id)">
+                    <b-button variant="danger" @click="destroy(id = row.item.id)">
                         <b-icon icon="trash" font-scale="1"></b-icon>
                     </b-button>
                 </template>
@@ -38,10 +41,17 @@
         </div>
         <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" aria-controls="sales-table">
         </b-pagination>
-        
+
     </div>
 
 </template>
+
+<style>
+.card-header {
+    background-color: #fff;
+    border-bottom: none;
+}
+</style>
 
 <script>
 import axios from 'axios';
@@ -68,10 +78,10 @@ export default {
             perPage: 10,
             currentPage: 1,
             fields: [
-                { key: 'transaction_id', sortable: true },   
+                { key: 'transaction_id', sortable: true },
                 { key: 'customer_name', sortable: true },
                 { key: 'total', sortable: true },
-                { key: 'deposit', sortable: true },             
+                { key: 'deposit', sortable: true },
                 { key: 'created_date', sortable: true },
                 { key: 'status', sortable: true },
                 { key: 'Edit', sortable: false }
@@ -101,7 +111,7 @@ export default {
                 });
         },
         editForm() {
-           
+
         },
         getClearFormObject() {
             return {
@@ -136,7 +146,7 @@ export default {
             this.id = null
             this.form = this.getClearFormObject()
         },
-        generatePDF($id){
+        generatePDF($id) {
             window.location.href = `/cash/createPDF/${$id}`
         },
         searchBy() {
@@ -158,11 +168,11 @@ export default {
                 });
         },
     },
-    watch: {       
+    watch: {
         search(newValue) {
             if (newValue == "" || newValue == null) {
                 this.getData();
-            }else if (newValue){
+            } else if (newValue) {
                 this.searchBy();
             }
         }
@@ -170,5 +180,4 @@ export default {
 }
 
 </script>
-    
-    
+

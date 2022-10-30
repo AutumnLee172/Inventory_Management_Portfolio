@@ -9,8 +9,8 @@
                 <b-form-input v-model="search" placeholder="Search"></b-form-input>
             </b-col>
         </b-row>
-        
-        
+
+
         <div class="card mb-4">
             <div class="card-header">
                 <h2>Invoices table</h2>
@@ -48,10 +48,17 @@
         </div>
         <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" aria-controls="merchant-table">
         </b-pagination>
-        
+
     </div>
 
 </template>
+
+<style>
+.card-header {
+    background-color: #fff;
+    border-bottom: none;
+}
+</style>
 
 <script>
 import axios from 'axios';
@@ -80,10 +87,10 @@ export default {
             perPage: 10,
             currentPage: 1,
             fields: [
-                { key: 'transaction_id', sortable: true },      
+                { key: 'transaction_id', sortable: true },
                 { key: 'customer_name', sortable: true },
                 { key: 'total', sortable: true },
-                { key: 'balance', sortable: true },          
+                { key: 'balance', sortable: true },
                 { key: 'created_date', sortable: true },
                 { key: 'status', sortable: true },
                 { key: 'Edit', sortable: false }
@@ -100,7 +107,7 @@ export default {
                 .get('/invoices')
                 .then((r) => {
                     this.isBusy = false
-                    if (r.data && r.data.data) {                        
+                    if (r.data && r.data.data) {
                         this.items = r.data.data;
                     }
                 })
@@ -188,5 +195,4 @@ export default {
 }
 
 </script>
-    
-    
+
