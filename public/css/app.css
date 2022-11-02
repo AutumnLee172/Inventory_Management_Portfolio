@@ -27128,3 +27128,11 @@ pre[class*=language-] {
     overflow-x: auto;
 }
 
+.navbar-vertical.navbar-expand-xs {
+    z-index: 0;
+  }
+
+.table td {
+    white-space: normal;
+}
+

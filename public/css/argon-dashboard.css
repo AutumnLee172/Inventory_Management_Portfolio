@@ -358,6 +358,11 @@ th {
   text-align: -webkit-match-parent;
 }
 
+td {
+  max-width: 240px;
+  overflow-x: auto;
+}
+
 thead,
 tbody,
 tfoot,
@@ -22535,7 +22540,6 @@ hr.horizontal.gray-light {
   overflow-y: auto;
   padding: 0;
   box-shadow: none;
-  z-index: 9999;
 }
 
 .navbar-vertical.navbar-expand-xs .navbar-collapse {
@@ -24588,7 +24592,7 @@ hr.horizontal.gray-light {
   margin: 0;
 }
 
-.table td,
+/* .table td, */
 .table th {
   white-space: nowrap;
 }

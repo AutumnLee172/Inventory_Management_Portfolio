@@ -18,7 +18,7 @@
                                 </b-form-select>
                                 <b-form-input class="sr-only" id="customer_name" v-model="form.customer_name"
                                     name="customer_name"></b-form-input>
-                                    <b-form-input class="sr-only" id="customer_id" v-model="form.customer_id"
+                                <b-form-input class="sr-only" id="customer_id" v-model="form.customer_id"
                                     name="customer_id"></b-form-input>
                             </b-form-group>
                         </b-col>
@@ -41,54 +41,61 @@
                     </b-row>
                     <hr class="horizontal dark">
                     <p class="text-uppercase text-sm">Items Information</p>
-                    <b-row class="px-1" v-for="(item, index) in items" v-bind:key="index">
-                        <b-col md="3">
-                            <b-form-group label="Item Number" label-for="item_number" class="small-font">
-                                <b-form-select id="item_number" v-model="item.item_number"
-                                    @change="findItem(item.item_number, index)">
-                                    <b-form-select-option v-for="(product, p) in products" :value="product.item_number"
-                                        id="item_number" name="item_number" v-bind:key="p" class="mb-2 mr-sm-2 mb-sm-0">
-                                        {{
-                                        product.item_number }} </b-form-select-option>
-                                </b-form-select>
-                            </b-form-group>
-                        </b-col>
-                        <b-col md="4">
-                            <b-form-group label="Description" label-for="description" class="small-font">
-                                <b-form-input id="description" readonly v-model="item.description"></b-form-input>
-                            </b-form-group>
-                        </b-col>
-                        <b-col md="1">
-                            <b-form-group label="Original Price" label-for="original_price" class="small-font">
-                                <b-form-input id="original_price" readonly v-model="item.original_price"></b-form-input>
-                            </b-form-group>
-                        </b-col>
-                        <b-col md="1">
-                            <b-form-group label="Selling Price" label-for="selling_price" class="small-font">
-                                <b-form-input id="selling_price" v-model="item.selling_price" type="number" step="0.01"
-                                    @change="calculateSubtotal(index, item)"></b-form-input>
-                            </b-form-group>
-                        </b-col>
-                        <b-col md="1">
-                            <b-form-group label="Quantity" label-for="quantity" class="small-font">
-                                <b-form-input id="quantity" v-model="item.quantity" type="number"
-                                    @change="calculateSubtotal(index, item)"></b-form-input>
-                            </b-form-group>
-                        </b-col>
-                        <b-col md="1">
-                            <b-form-group label="Sub Total" label-for="sub_total" class="small-font">
-                                <b-form-input id="sub_total" v-model="item.sub_total" readonly></b-form-input>
-                            </b-form-group>
-                        </b-col>
-                        <b-col md="1">
-                            <b-form-group label="Remove" label-for="remove_button" class="text-center small-font">
-                                <b-button id="remove_button" variant="danger" class="mx-auto" style="display: block;"
-                                    @click="removeItem(index)">
-                                    <b-icon icon="x-circle" font-scale="1"></b-icon>
-                                </b-button>
-                            </b-form-group>
-                        </b-col>
-                    </b-row>
+                    <b-container class="px-1" v-for="(item, index) in items" v-bind:key="index">
+                        <b-row>
+                            <b-col >
+                                <b-form-group label="Item Number" label-for="item_number" class="small-font">
+                                    <b-form-select id="item_number" v-model="item.item_number"
+                                        @change="findItem(item.item_number, index)">
+                                        <b-form-select-option v-for="(product, p) in products"
+                                            :value="product.item_number" id="item_number" name="item_number"
+                                            v-bind:key="p" class="mb-2 mr-sm-2 mb-sm-0">
+                                            {{
+                                                    product.item_number
+                                            }} </b-form-select-option>
+                                    </b-form-select>
+                                </b-form-group>
+                            </b-col>
+                            <b-col >
+                                <b-form-group label="Description" label-for="description" class="small-font">
+                                    <b-form-input id="description" readonly v-model="item.description"></b-form-input>
+                                </b-form-group>
+                            </b-col>
+                        <!-- </b-row>
+                        <b-row> -->
+                            <b-col >
+                                <b-form-group label="Original Price" label-for="original_price" class="small-font">
+                                    <b-form-input id="original_price" readonly v-model="item.original_price">
+                                    </b-form-input>
+                                </b-form-group>
+                            </b-col>
+                            <b-col >
+                                <b-form-group label="Selling Price" label-for="selling_price" class="small-font">
+                                    <b-form-input id="selling_price" v-model="item.selling_price" type="number"
+                                        step="0.01" @change="calculateSubtotal(index, item)"></b-form-input>
+                                </b-form-group>
+                            </b-col>
+                            <b-col >
+                                <b-form-group label="Quantity" label-for="quantity" class="small-font">
+                                    <b-form-input id="quantity" v-model="item.quantity" type="number"
+                                        @change="calculateSubtotal(index, item)"></b-form-input>
+                                </b-form-group>
+                            </b-col>
+                            <b-col >
+                                <b-form-group label="Sub Total" label-for="sub_total" class="small-font">
+                                    <b-form-input id="sub_total" v-model="item.sub_total" readonly></b-form-input>
+                                </b-form-group>
+                            </b-col>
+                            <b-col >
+                                <b-form-group label="Remove" label-for="remove_button" class="text-center small-font">
+                                    <b-button id="remove_button" variant="danger" class="mx-auto"
+                                        style="display: block;" @click="removeItem(index)">
+                                        <b-icon icon="x-circle" font-scale="1"></b-icon>
+                                    </b-button>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+                    </b-container>
                     <b-row class="px-3">
 
                         <b-button variant="primary" @click="addItem">
@@ -190,7 +197,7 @@ export default {
         this.fetchCustomer()
         this.fetchProducts()
         this.getClearFormObject()
-        if(this.id){
+        if (this.id) {
             this.getOrderData()
         }
     },
@@ -314,7 +321,7 @@ export default {
             let method = 'post'
             let url = '/invoices/new'
 
-              if(this.id){
+            if (this.id) {
                 url = `/invoices/edit/${this.id}`
             }
 
@@ -325,18 +332,18 @@ export default {
             }).then(r => {
                 if (!this.id && r.data.data.id) {
                     this.$swal('Successfully Created');
-                }else {
+                } else {
                     this.$swal('Successfully updated');
                 }
                 this.isLoading = false;
-                this.$router.push('/invoices') 
+                this.$router.push('/invoices')
             }).catch(e => {
                 this.$swal('An error has ocured' + e);
                 this.isLoading = false;
             });
 
         },
-        getOrderData(){
+        getOrderData() {
             axios
                 .get(`/invoices/get/${this.id}`)
                 .then((r) => {
@@ -374,5 +381,4 @@ export default {
 }
 
 </script>
-    
-    
+
