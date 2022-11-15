@@ -27127,6 +27127,13 @@ pre[class*=language-] {
     width: 100%;
     overflow-x: auto;
 }
+.input-group-text{
+    width: 140px;
+}
+.form-control{
+    margin-left: 0px;
+    padding-left: 6px;
+}
 
 .navbar-vertical.navbar-expand-xs {
     z-index: 0;

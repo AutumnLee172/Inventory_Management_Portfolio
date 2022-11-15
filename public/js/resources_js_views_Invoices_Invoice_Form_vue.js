@@ -416,10 +416,14 @@ var render = function render() {
   }), _vm._v(" "), _c("p", {
     staticClass: "text-uppercase text-sm"
   }, [_vm._v("Items Information")]), _vm._v(" "), _vm._l(_vm.items, function (item, index) {
-    return _c("b-container", {
+    return _c("b-row", {
       key: index,
       staticClass: "px-1"
-    }, [_c("b-row", [_c("b-col", [_c("b-form-group", {
+    }, [_c("b-col", {
+      attrs: {
+        md: "3"
+      }
+    }, [_c("b-form-group", {
       staticClass: "small-font",
       attrs: {
         label: "Item Number",
@@ -451,7 +455,11 @@ var render = function render() {
           name: "item_number"
         }
       }, [_vm._v("\n                                        " + _vm._s(product.item_number) + " ")]);
-    }), 1)], 1)], 1), _vm._v(" "), _c("b-col", [_c("b-form-group", {
+    }), 1)], 1)], 1), _vm._v(" "), _c("b-col", {
+      attrs: {
+        md: "4"
+      }
+    }, [_c("b-form-group", {
       staticClass: "small-font",
       attrs: {
         label: "Description",
@@ -469,10 +477,14 @@ var render = function render() {
         },
         expression: "item.description"
       }
-    })], 1)], 1), _vm._v(" "), _c("b-col", [_c("b-form-group", {
+    })], 1)], 1), _vm._v(" "), _c("b-col", {
+      attrs: {
+        md: "1"
+      }
+    }, [_c("b-form-group", {
       staticClass: "small-font",
       attrs: {
-        label: "Original Price",
+        label: "Original $",
         "label-for": "original_price"
       }
     }, [_c("b-form-input", {
@@ -487,10 +499,14 @@ var render = function render() {
         },
         expression: "item.original_price"
       }
-    })], 1)], 1), _vm._v(" "), _c("b-col", [_c("b-form-group", {
+    })], 1)], 1), _vm._v(" "), _c("b-col", {
+      attrs: {
+        md: "1"
+      }
+    }, [_c("b-form-group", {
       staticClass: "small-font",
       attrs: {
-        label: "Selling Price",
+        label: "Selling $",
         "label-for": "selling_price"
       }
     }, [_c("b-form-input", {
@@ -511,7 +527,11 @@ var render = function render() {
         },
         expression: "item.selling_price"
       }
-    })], 1)], 1), _vm._v(" "), _c("b-col", [_c("b-form-group", {
+    })], 1)], 1), _vm._v(" "), _c("b-col", {
+      attrs: {
+        md: "1"
+      }
+    }, [_c("b-form-group", {
       staticClass: "small-font",
       attrs: {
         label: "Quantity",
@@ -534,7 +554,11 @@ var render = function render() {
         },
         expression: "item.quantity"
       }
-    })], 1)], 1), _vm._v(" "), _c("b-col", [_c("b-form-group", {
+    })], 1)], 1), _vm._v(" "), _c("b-col", {
+      attrs: {
+        md: "1"
+      }
+    }, [_c("b-form-group", {
       staticClass: "small-font",
       attrs: {
         label: "Sub Total",
@@ -552,7 +576,11 @@ var render = function render() {
         },
         expression: "item.sub_total"
       }
-    })], 1)], 1), _vm._v(" "), _c("b-col", [_c("b-form-group", {
+    })], 1)], 1), _vm._v(" "), _c("b-col", {
+      attrs: {
+        md: "1"
+      }
+    }, [_c("b-form-group", {
       staticClass: "text-center small-font",
       attrs: {
         label: "Remove",
@@ -577,7 +605,7 @@ var render = function render() {
         icon: "x-circle",
         "font-scale": "1"
       }
-    })], 1)], 1)], 1)], 1)], 1);
+    })], 1)], 1)], 1)], 1);
   }), _vm._v(" "), _c("b-row", {
     staticClass: "px-3"
   }, [_c("b-button", {

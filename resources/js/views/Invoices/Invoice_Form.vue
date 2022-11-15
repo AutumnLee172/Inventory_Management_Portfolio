@@ -41,9 +41,8 @@
                     </b-row>
                     <hr class="horizontal dark">
                     <p class="text-uppercase text-sm">Items Information</p>
-                    <b-container class="px-1" v-for="(item, index) in items" v-bind:key="index">
-                        <b-row>
-                            <b-col >
+                        <b-row class="px-1" v-for="(item, index) in items" v-bind:key="index">
+                            <b-col md="3">
                                 <b-form-group label="Item Number" label-for="item_number" class="small-font">
                                     <b-form-select id="item_number" v-model="item.item_number"
                                         @change="findItem(item.item_number, index)">
@@ -56,37 +55,35 @@
                                     </b-form-select>
                                 </b-form-group>
                             </b-col>
-                            <b-col >
+                            <b-col md="4">
                                 <b-form-group label="Description" label-for="description" class="small-font">
                                     <b-form-input id="description" readonly v-model="item.description"></b-form-input>
                                 </b-form-group>
                             </b-col>
-                        <!-- </b-row>
-                        <b-row> -->
-                            <b-col >
-                                <b-form-group label="Original Price" label-for="original_price" class="small-font">
+                            <b-col md="1">
+                                <b-form-group label="Original $" label-for="original_price" class="small-font">
                                     <b-form-input id="original_price" readonly v-model="item.original_price">
                                     </b-form-input>
                                 </b-form-group>
                             </b-col>
-                            <b-col >
-                                <b-form-group label="Selling Price" label-for="selling_price" class="small-font">
+                            <b-col md="1">
+                                <b-form-group label="Selling $" label-for="selling_price" class="small-font">
                                     <b-form-input id="selling_price" v-model="item.selling_price" type="number"
                                         step="0.01" @change="calculateSubtotal(index, item)"></b-form-input>
                                 </b-form-group>
                             </b-col>
-                            <b-col >
+                            <b-col md="1">
                                 <b-form-group label="Quantity" label-for="quantity" class="small-font">
                                     <b-form-input id="quantity" v-model="item.quantity" type="number"
                                         @change="calculateSubtotal(index, item)"></b-form-input>
                                 </b-form-group>
                             </b-col>
-                            <b-col >
+                            <b-col md="1">
                                 <b-form-group label="Sub Total" label-for="sub_total" class="small-font">
                                     <b-form-input id="sub_total" v-model="item.sub_total" readonly></b-form-input>
                                 </b-form-group>
                             </b-col>
-                            <b-col >
+                            <b-col md="1">
                                 <b-form-group label="Remove" label-for="remove_button" class="text-center small-font">
                                     <b-button id="remove_button" variant="danger" class="mx-auto"
                                         style="display: block;" @click="removeItem(index)">
@@ -95,7 +92,6 @@
                                 </b-form-group>
                             </b-col>
                         </b-row>
-                    </b-container>
                     <b-row class="px-3">
 
                         <b-button variant="primary" @click="addItem">

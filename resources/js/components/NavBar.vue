@@ -7,7 +7,7 @@
             <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
                 aria-hidden="true" id="iconSidenav"></i>
             <a class="navbar-brand m-0" href="#" style="cursor:default;">
-                <img src="https://scontent.fkul15-1.fna.fbcdn.net/v/t1.6435-9/96168008_167712064705716_7306211116818890752_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=13hf2omeIyQAX9-NBDl&_nc_ht=scontent.fkul15-1.fna&oh=00_AT-ac2uqGdeTwY0JffeTJOFKTM21TjM3V8VOEjlOdAsYuw&oe=63652DD0"
+                <img src="..\resources\img\jacenterpriselogo.jpg"
                     class="navbar-brand-img h-100" alt="main_logo">
                 <span class="ms-1 font-weight-bold">JAC Light Enterprise</span>
             </a>
