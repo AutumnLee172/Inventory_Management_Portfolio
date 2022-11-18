@@ -27143,3 +27143,13 @@ pre[class*=language-] {
     white-space: normal;
 }
 
+.card-height{
+    height: 160px;
+}
+
+@media only screen and (max-width: 1270px) {
+    .card-height{
+        height: 200px;
+    }
+  }
+
