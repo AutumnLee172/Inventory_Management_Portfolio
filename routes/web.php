@@ -53,6 +53,15 @@ Route::prefix('/customers')->group(function () {
     Route::patch('/update/{customer}', 'App\Http\Controllers\CustomersController@update');
 });
 
+Route::prefix('/suppliers')->group(function () {
+    Route::get('', 'App\Http\Controllers\SuppliersController@index');
+    Route::get('/search/{keywords}', 'App\Http\Controllers\SuppliersController@search');
+    Route::get('{id}', 'App\Http\Controllers\SuppliersController@show');
+    Route::post('/add', 'App\Http\Controllers\SuppliersController@add');
+    Route::post('/destroy/{id}', 'App\Http\Controllers\SuppliersController@destroy');
+    Route::patch('/update/{supplier}', 'App\Http\Controllers\SuppliersController@update');
+});
+
 Route::prefix('/invoices')->group(function () {
     Route::post('new', 'App\Http\Controllers\InvoicesController@create');
     Route::get('/search/{keywords}', 'App\Http\Controllers\InvoicesController@search');
@@ -84,4 +93,14 @@ Route::prefix('/cash')->group(function () {
     Route::get('/search/{keywords}', 'App\Http\Controllers\CashController@search');
     Route::post('/edit/{id}', 'App\Http\Controllers\CashController@update');
     Route::get('/get/{id}', 'App\Http\Controllers\CashController@getCashSale');
+});
+
+Route::prefix('/receives')->group(function () {
+    Route::post('new', 'App\Http\Controllers\ReceivesController@create');
+    Route::get('', 'App\Http\Controllers\ReceivesController@index');
+    Route::get('/createPDF/{id}', 'App\Http\Controllers\ReceivesController@createPDF');
+    Route::post('/destroy/{id}', 'App\Http\Controllers\ReceivesController@destroy');
+    Route::get('/search/{keywords}', 'App\Http\Controllers\ReceivesController@search');
+    Route::post('/edit/{id}', 'App\Http\Controllers\ReceivesController@update');
+    Route::get('/get/{id}', 'App\Http\Controllers\ReceivesController@getCashSale');
 });

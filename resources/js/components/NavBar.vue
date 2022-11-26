@@ -43,6 +43,15 @@
                     </router-link>
                 </li>
                 <li class="nav-item">
+                    <router-link to="/suppliers" class="nav-link" active-class="active" exact>
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <b-icon class="ni ni-tv-2 text-warning text-sm opacity-10" icon="box-seam"></b-icon>
+                        </div>
+                        <span class="nav-link-text ms-1">Suppliers</span>
+                    </router-link>
+                </li>
+                <li class="nav-item">
                     <router-link to="/profile" class="nav-link" active-class="active" exact>
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -79,6 +88,15 @@
                             <b-icon class="ni ni-tv-2 text-success text-sm opacity-10" icon="cash-coin"></b-icon>
                         </div>
                         <span class="nav-link-text ms-1">Cash Sales</span>
+                    </router-link>
+                </li>
+                <li class="nav-item">
+                    <router-link to="/receives" class="nav-link" active-class="active" exact>
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <b-icon class="ni ni-tv-2 text-danger text-sm opacity-10" icon="truck"></b-icon>
+                        </div>
+                        <span class="nav-link-text ms-1">Supplies</span>
                     </router-link>
                 </li>
                 <div style="position: fixed; bottom: 20px">

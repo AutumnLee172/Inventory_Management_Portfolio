@@ -28,9 +28,9 @@ export default new Router({
       component: () => import('./views/Customers.vue')
     },
     {
-      path: '/profile',
-      name: 'profile',
-      component: () => import('./views/Profile.vue')
+      path: '/suppliers',
+      name: 'suppliers',
+      component: () => import('./views/Suppliers.vue')
     },
     {
       path: '/invoices',
@@ -85,7 +85,17 @@ export default new Router({
       name: 'cash.edit',
       component: () => import('./views/Cash/Cash_Form.vue'),
       props: true
-    }
+    },
+    {
+      path: '/Receives',
+      name: 'receives',
+      component: () => import('./views/Receives/Receives.vue')
+    },
+    {
+      path: '/Receives/new',
+      name: 'receives.new',
+      component: () => import('./views/Receives/Receive_Form.vue')
+    },
   ],
   scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {
