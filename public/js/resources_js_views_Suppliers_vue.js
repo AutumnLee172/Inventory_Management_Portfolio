@@ -442,7 +442,7 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "card-header"
-  }, [_c("h2", [_vm._v("Customers table")])]);
+  }, [_c("h2", [_vm._v("Suppliers table")])]);
 }];
 render._withStripped = true;
 

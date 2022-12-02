@@ -152,7 +152,7 @@ import axios from 'axios';
 
 
 export default {
-    name: "Cash_Form",
+    name: "Receive_Form",
     props: {
         id: {
             default: null
@@ -307,10 +307,10 @@ export default {
             this.calculateTotal()
             this.isLoading = true
             let method = 'post'
-            let url = '/cash/new'
+            let url = '/receives/new'
 
             if(this.id){
-                url = `/cash/edit/${this.id}`
+                url = `/receives/edit/${this.id}`
             }
             axios({
                 method,
@@ -323,7 +323,7 @@ export default {
                     this.$swal('Successfully updated');
                 }
                 this.isLoading = false;
-                this.$router.push('/cash') 
+                this.$router.push('/receives') 
             }).catch(e => {
                 this.$swal('An error has ocured' + e);
                 this.isLoading = false;
@@ -332,11 +332,11 @@ export default {
         },
         getOrderData(){
             axios
-                .get(`/cash/get/${this.id}`)
+                .get(`/receives/get/${this.id}`)
                 .then((r) => {
                     if (r.data && r.data.data) {
                         this.form = r.data.data;
-                        this.selectedSupplier = this.form.customer_id;
+                        this.selectedSupplier = this.form.supplier_id;
                         this.items = r.data.items;
                     }
                 })

@@ -102,5 +102,5 @@ Route::prefix('/receives')->group(function () {
     Route::post('/destroy/{id}', 'App\Http\Controllers\ReceivesController@destroy');
     Route::get('/search/{keywords}', 'App\Http\Controllers\ReceivesController@search');
     Route::post('/edit/{id}', 'App\Http\Controllers\ReceivesController@update');
-    Route::get('/get/{id}', 'App\Http\Controllers\ReceivesController@getCashSale');
+    Route::get('/get/{id}', 'App\Http\Controllers\ReceivesController@getReceiveOrder');
 });

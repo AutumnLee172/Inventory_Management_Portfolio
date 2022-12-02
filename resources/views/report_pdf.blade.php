@@ -24,7 +24,6 @@
         .center{
             text-align: center;
             margin: auto;
-            width: 50%;
             padding: 5px;
         }
         .leftside{
@@ -62,6 +61,11 @@
         width: 100%;
         text-align: left;
         }
+        
+        h3, h5 {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
 
     </style>
 
@@ -75,31 +79,34 @@
 
                 <h3> {{ $items[0]->transaction_type }} </h3>
                 <h5 class="righthandside">{{ $data->created_date }} </h5>
-                <h5>Transaction ID: {{ $data->transaction_id }}</h5>
+                <h5>No: {{ $data->transaction_id }}</h5>
                 <h5>Customer Name: {{ $data->customer_name }} </h5>
+                @if ( $items[0]->transaction_type !== "Cash Sale" )                
                 <h5>Phone Number: {{ $data->phone_number }} </h5>
                 <h5 class="blockhalf">Address: {{ $data->address }} </h5>
                 <h5>Remark: {{ $data->remark }} </h5>
-
+                @endif
 
             <hr/>
             <br/>
 
-            <table class="border-table border">
+            <table class="border-table">
                 <tr class="border">
+                <th class="border">No</th>
                   <th class="border">Item Number</th>
                   <th class="border">Description</th>
-                  <th class="border">Price</th>
-                  <th class="border">Quantity</th>
-                  <th class="border">Sub total</th>
+                  <th class="border">Price (RM)</th>
+                  <th class="border">Qty</th>
+                  <th class="border">Amount</th>
                 </tr>
                 @foreach ($items as $item)
-                <tr class="border">
-                    <td class="border">{{ $item->item_number }}</td>
-                    <td class="border">{{ $item->description }}</td>
-                    <td class="border" style="text-align: center;">RM {{ $item->selling_price }}</td>
-                    <td class="border" style="text-align: center;">{{ $item->quantity }}</td>
-                    <td class="border" style="text-align: center;">RM {{ $item->sub_total }}</td>
+                <tr>
+                    <td style="text-align: center;">{{ $loop->index + 1 }}</td>
+                    <td>{{ $item->item_number }}</td>
+                    <td>{{ $item->description }}</td>
+                    <td style="text-align: center;">{{ $item->selling_price }}</td>
+                    <td style="text-align: center;">{{ $item->quantity }}</td>
+                    <td style="text-align: center;">RM {{ $item->sub_total }}</td>
                 </tr>
             @endforeach
               </table>
@@ -108,6 +115,7 @@
                 <tr>
                 <td style="text-align: right;">Total:</td> <td style="text-align: right;">RM{{ $data->total }}</td>
                 </tr>
+                @if ( $items[0]->transaction_type !== "Cash Sale" )
                 <tr>
                 <td style="text-align: right;">Discount:</td> <td style="text-align: right;">RM{{ $data->discount }}</td>
                 </tr>
@@ -120,9 +128,8 @@
                 <tr>
                 <td style="text-align: right;">Balance:</td> <td style="text-align: right;">RM{{ $data->balance }}</td>
                 </tr>
+                @endif
               </table>
-            <div class="footer">For more information, please contact +60164124187</div>
-
     </div>
 
 </body>

@@ -18,24 +18,21 @@
             <b-table :busy="isBusy" class="table align-items-center mb-0" id="sales-table" :fields="fields" head-variant="light"
                 :items="items" sort-by="transaction_id" :sort-desc=true responsive="sm" :per-page="perPage" :current-page="currentPage">
                 <template #cell(Edit)="row">
-                    <b-button variant="success" @click="complete(row.item.id)" v-if="row.item.status == 'Pending'">
+                    <!-- <b-button variant="success" @click="complete(row.item.id)" v-if="row.item.status == 'Pending'">
                         <b-icon icon="check2-circle" font-scale="1"></b-icon>
                     </b-button>
                     <b-button variant="success" v-if="row.item.status == 'Completed'" disabled>
                         <b-icon icon="check2-circle" font-scale="1"></b-icon>
-                    </b-button>
+                    </b-button> -->
                     <b-button variant="info" @click="generatePDF(row.item.id)">
                         <b-icon icon="file-earmark-arrow-down" font-scale="1"></b-icon>
                     </b-button>
-                    <router-link :to="{name:'invoices.edit', params: {id: row.item.id}}" v-if="row.item.status == 'Pending'">
+                    <router-link :to="{name:'receives.edit', params: {id: row.item.id}}">
                     <b-button variant="primary" >
                         <b-icon icon="pencil-square" font-scale="1"></b-icon>
                     </b-button>
                     </router-link>
-                    <b-button variant="primary" disabled v-if="row.item.status == 'Completed'">
-                        <b-icon icon="pencil-square" font-scale="1"></b-icon>
-                    </b-button>
-                    <b-button variant="danger" @click="destroy(id=row.item.id)" :disabled="row.item.status == 'Completed'">
+                    <b-button variant="danger" @click="destroy(id=row.item.id)" >
                         <b-icon icon="trash" font-scale="1"></b-icon>
                     </b-button>
                 </template>
@@ -65,7 +62,7 @@ import axios from 'axios';
 
 
 export default {
-    name: "Invoices",
+    name: "Receives",
     props: {
         id: {
             default: null
@@ -120,30 +117,30 @@ export default {
                 });
         },
         generatePDF($id){
-            window.location.href = `/invoices/createPDF/${$id}`
+            window.location.href = `/receives/createPDF/${$id}`
         },
-        complete($id){
-            this.$swal.fire({
-                title: 'Are you sure to complete this?',
-                showCancelButton: true,
-                confirmButtonText: 'Confirm',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    axios.post(`/invoices/complete/${$id}`).then(r => {
-                        this.$swal('Order is completed');
-                        this.getData();
+        // complete($id){
+        //     this.$swal.fire({
+        //         title: 'Are you sure to complete this?',
+        //         showCancelButton: true,
+        //         confirmButtonText: 'Confirm',
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             axios.post(`/invoices/complete/${$id}`).then(r => {
+        //                 this.$swal('Order is completed');
+        //                 this.getData();
 
-                    }).catch(e => {
-                        this.$swal('An error has ocured' + e);
-                        this.getData();
-                    });
-                }
-            })
-        },
+        //             }).catch(e => {
+        //                 this.$swal('An error has ocured' + e);
+        //                 this.getData();
+        //             });
+        //         }
+        //     })
+        // },
         searchBy() {
             this.isBusy = true
             axios
-                .get(`/invoices/search/${this.search}`)
+                .get(`/receives/search/${this.search}`)
                 .then((r) => {
                     if (r.data && r.data.data) {
                         this.isBusy = false
@@ -165,7 +162,7 @@ export default {
                 confirmButtonText: 'Confirm',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.post(`/invoices/destroy/${$id}`).then(r => {
+                    axios.post(`/receives/destroy/${$id}`).then(r => {
                         this.$swal('Successfully deleted');
                         this.getData();
 

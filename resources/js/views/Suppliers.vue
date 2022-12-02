@@ -13,7 +13,7 @@
 
         <div class="card mb-4">
             <div class="card-header">
-                <h2>Customers table</h2>
+                <h2>Suppliers table</h2>
             </div>
             <b-table :busy="isBusy" class="table align-items-center mb-0" id="merchant-table" :fields="fields" head-variant="light"
                 :items="items" sort-by="id" responsive="sm" :per-page="perPage" :current-page="currentPage">

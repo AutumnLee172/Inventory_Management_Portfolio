@@ -96,6 +96,12 @@ export default new Router({
       name: 'receives.new',
       component: () => import('./views/Receives/Receive_Form.vue')
     },
+    {
+      path: '/Receives/edit/:id',
+      name: 'receives.edit',
+      component: () => import('./views/Receives/Receive_Form.vue'),
+      props: true
+    },
   ],
   scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {

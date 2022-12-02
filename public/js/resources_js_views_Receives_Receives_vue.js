@@ -15,7 +15,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "Invoices",
+  name: "Receives",
   props: {
     id: {
       "default": null
@@ -81,56 +81,55 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     generatePDF: function generatePDF($id) {
-      window.location.href = "/invoices/createPDF/".concat($id);
+      window.location.href = "/receives/createPDF/".concat($id);
     },
-    complete: function complete($id) {
-      var _this2 = this;
-      this.$swal.fire({
-        title: 'Are you sure to complete this?',
-        showCancelButton: true,
-        confirmButtonText: 'Confirm'
-      }).then(function (result) {
-        if (result.isConfirmed) {
-          axios__WEBPACK_IMPORTED_MODULE_0___default().post("/invoices/complete/".concat($id)).then(function (r) {
-            _this2.$swal('Order is completed');
-            _this2.getData();
-          })["catch"](function (e) {
-            _this2.$swal('An error has ocured' + e);
-            _this2.getData();
-          });
-        }
-      });
-    },
+    // complete($id){
+    //     this.$swal.fire({
+    //         title: 'Are you sure to complete this?',
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Confirm',
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             axios.post(`/invoices/complete/${$id}`).then(r => {
+    //                 this.$swal('Order is completed');
+    //                 this.getData();
+    //             }).catch(e => {
+    //                 this.$swal('An error has ocured' + e);
+    //                 this.getData();
+    //             });
+    //         }
+    //     })
+    // },
     searchBy: function searchBy() {
-      var _this3 = this;
+      var _this2 = this;
       this.isBusy = true;
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get("/invoices/search/".concat(this.search)).then(function (r) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get("/receives/search/".concat(this.search)).then(function (r) {
         if (r.data && r.data.data) {
-          _this3.isBusy = false;
-          _this3.items = r.data.data;
+          _this2.isBusy = false;
+          _this2.items = r.data.data;
         }
       })["catch"](function (err) {
-        _this3.isBusy = false;
-        _this3.$bvToast.toast("Error: ", {
+        _this2.isBusy = false;
+        _this2.$bvToast.toast("Error: ", {
           title: 'Error',
           autoHideDelay: 5000
         });
       });
     },
     destroy: function destroy($id) {
-      var _this4 = this;
+      var _this3 = this;
       this.$swal.fire({
         title: 'Are you sure to delete this?',
         showCancelButton: true,
         confirmButtonText: 'Confirm'
       }).then(function (result) {
         if (result.isConfirmed) {
-          axios__WEBPACK_IMPORTED_MODULE_0___default().post("/invoices/destroy/".concat($id)).then(function (r) {
-            _this4.$swal('Successfully deleted');
-            _this4.getData();
+          axios__WEBPACK_IMPORTED_MODULE_0___default().post("/receives/destroy/".concat($id)).then(function (r) {
+            _this3.$swal('Successfully deleted');
+            _this3.getData();
           })["catch"](function (e) {
-            _this4.$swal('An error has ocured' + e);
-            _this4.getData();
+            _this3.$swal('An error has ocured' + e);
+            _this3.getData();
           });
         }
       });
@@ -219,31 +218,7 @@ var render = function render() {
     scopedSlots: _vm._u([{
       key: "cell(Edit)",
       fn: function fn(row) {
-        return [row.item.status == "Pending" ? _c("b-button", {
-          attrs: {
-            variant: "success"
-          },
-          on: {
-            click: function click($event) {
-              return _vm.complete(row.item.id);
-            }
-          }
-        }, [_c("b-icon", {
-          attrs: {
-            icon: "check2-circle",
-            "font-scale": "1"
-          }
-        })], 1) : _vm._e(), _vm._v(" "), row.item.status == "Completed" ? _c("b-button", {
-          attrs: {
-            variant: "success",
-            disabled: ""
-          }
-        }, [_c("b-icon", {
-          attrs: {
-            icon: "check2-circle",
-            "font-scale": "1"
-          }
-        })], 1) : _vm._e(), _vm._v(" "), _c("b-button", {
+        return [_c("b-button", {
           attrs: {
             variant: "info"
           },
@@ -257,10 +232,10 @@ var render = function render() {
             icon: "file-earmark-arrow-down",
             "font-scale": "1"
           }
-        })], 1), _vm._v(" "), row.item.status == "Pending" ? _c("router-link", {
+        })], 1), _vm._v(" "), _c("router-link", {
           attrs: {
             to: {
-              name: "invoices.edit",
+              name: "receives.edit",
               params: {
                 id: row.item.id
               }
@@ -275,20 +250,9 @@ var render = function render() {
             icon: "pencil-square",
             "font-scale": "1"
           }
-        })], 1)], 1) : _vm._e(), _vm._v(" "), row.item.status == "Completed" ? _c("b-button", {
+        })], 1)], 1), _vm._v(" "), _c("b-button", {
           attrs: {
-            variant: "primary",
-            disabled: ""
-          }
-        }, [_c("b-icon", {
-          attrs: {
-            icon: "pencil-square",
-            "font-scale": "1"
-          }
-        })], 1) : _vm._e(), _vm._v(" "), _c("b-button", {
-          attrs: {
-            variant: "danger",
-            disabled: row.item.status == "Completed"
+            variant: "danger"
           },
           on: {
             click: function click($event) {

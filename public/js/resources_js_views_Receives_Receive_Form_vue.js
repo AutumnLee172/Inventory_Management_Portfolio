@@ -16,7 +16,7 @@ __webpack_require__.r(__webpack_exports__);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "Cash_Form",
+  name: "Receive_Form",
   props: {
     id: {
       "default": null
@@ -192,9 +192,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.calculateTotal();
       this.isLoading = true;
       var method = 'post';
-      var url = '/cash/new';
+      var url = '/receives/new';
       if (this.id) {
-        url = "/cash/edit/".concat(this.id);
+        url = "/receives/edit/".concat(this.id);
       }
       axios__WEBPACK_IMPORTED_MODULE_0___default()({
         method: method,
@@ -207,7 +207,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           _this5.$swal('Successfully updated');
         }
         _this5.isLoading = false;
-        _this5.$router.push('/cash');
+        _this5.$router.push('/receives');
       })["catch"](function (e) {
         _this5.$swal('An error has ocured' + e);
         _this5.isLoading = false;
@@ -215,10 +215,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     getOrderData: function getOrderData() {
       var _this6 = this;
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get("/cash/get/".concat(this.id)).then(function (r) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get("/receives/get/".concat(this.id)).then(function (r) {
         if (r.data && r.data.data) {
           _this6.form = r.data.data;
-          _this6.selectedSupplier = _this6.form.customer_id;
+          _this6.selectedSupplier = _this6.form.supplier_id;
           _this6.items = r.data.items;
         }
       })["catch"](function (err) {
