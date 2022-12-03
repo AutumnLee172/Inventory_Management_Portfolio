@@ -44,7 +44,7 @@
                         <b-row class="px-1" v-for="(item, index) in items" v-bind:key="index">
                             <b-col md="3">
                                 <b-form-group label="Item Number" label-for="item_number" class="small-font">
-                                    <b-form-select id="item_number" v-model="item.item_number"
+                                    <!-- <b-form-select id="item_number" v-model="item.item_number"
                                         @change="findItem(item.item_number, index)">
                                         <b-form-select-option v-for="(product, p) in products"
                                             :value="product.item_number" id="item_number" name="item_number"
@@ -52,7 +52,8 @@
                                             {{
                                                     product.item_number
                                             }} </b-form-select-option>
-                                    </b-form-select>
+                                    </b-form-select> -->
+                                    <v-select style="font-size: 1rem;" @input="findItem(item.item_number, index)" id="item_number" name="item_number" v-model="item.item_number" label="item_number" :options="products"></v-select>
                                 </b-form-group>
                             </b-col>
                             <b-col md="4">
@@ -259,22 +260,23 @@ export default {
                 });
         },
         findItem(itemNumber, index) {
-
-            axios
-                .get(`/products/find/${itemNumber}`)
-                .then((r) => {
-                    if (r.data && r.data.data) {
-                        this.items.splice(index, 1, { item_number: itemNumber, description: r.data.data.description, original_price: r.data.data.original_price, selling_price: r.data.data.selling_price, quantity: 0, sub_total: 0 })
-                        this.calculateTotal()
-                    }
-                })
-                .catch((err) => {
-                    // this.isLoading = false;
-                    this.$bvToast.toast(err, {
-                        title: 'Error',
-                        autoHideDelay: 5000
-                    });
-                });
+            this.items.splice(index, 1, { item_number: itemNumber.item_number, description: itemNumber.description, original_price: itemNumber.original_price, selling_price: itemNumber.selling_price, quantity: 0, sub_total: 0 })
+            this.calculateTotal()
+            // axios
+            //     .get(`/products/find/${itemNumber}`)
+            //     .then((r) => {
+            //         if (r.data && r.data.data) {
+            //             this.items.splice(index, 1, { item_number: itemNumber, description: r.data.data.description, original_price: r.data.data.original_price, selling_price: r.data.data.selling_price, quantity: 0, sub_total: 0 })
+            //             this.calculateTotal()
+            //         }
+            //     })
+            //     .catch((err) => {
+            //         // this.isLoading = false;
+            //         this.$bvToast.toast(err, {
+            //             title: 'Error',
+            //             autoHideDelay: 5000
+            //         });
+            //     });
         },
         calculateSubtotal(index, product) {
             var sellingPrice = parseFloat(product.selling_price)

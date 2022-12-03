@@ -57,7 +57,7 @@
         .footer {
         position: fixed;
         left: 0;
-        bottom: 0;
+        bottom: 70px;
         width: 100%;
         text-align: left;
         }
@@ -65,6 +65,10 @@
         h3, h5 {
             margin-top: 5px;
             margin-bottom: 5px;
+        }
+
+        td{
+            font-size: 15px;
         }
 
     </style>
@@ -104,32 +108,43 @@
                     <td style="text-align: center;">{{ $loop->index + 1 }}</td>
                     <td>{{ $item->item_number }}</td>
                     <td>{{ $item->description }}</td>
-                    <td style="text-align: center;">{{ $item->selling_price }}</td>
-                    <td style="text-align: center;">{{ $item->quantity }}</td>
-                    <td style="text-align: center;">RM {{ $item->sub_total }}</td>
+                    <td style="text-align: right;">{{ number_format($item->selling_price, 2, '.', ',') }}</td>
+                    <td style="text-align: right;">{{ $item->quantity }}</td>
+                    <td style="text-align: right;">{{ number_format($item->sub_total, 2, '.', ',') }}</td>
                 </tr>
             @endforeach
               </table>
               <br/>
+              @if ( $items[0]->transaction_type !== "Cash Sale" )
+              <div class="footer">
+                <hr/>
               <table class="borderless righthandside">
                 <tr>
-                <td style="text-align: right;">Total:</td> <td style="text-align: right;">RM{{ $data->total }}</td>
-                </tr>
-                @if ( $items[0]->transaction_type !== "Cash Sale" )
-                <tr>
-                <td style="text-align: right;">Discount:</td> <td style="text-align: right;">RM{{ $data->discount }}</td>
+                <td style="text-align: right;">Total:</td> <td style="text-align: right;">RM{{ number_format($data->total, 2, '.', ',') }}</td>
                 </tr>
                 <tr>
-                <td style="text-align: right;">Net:</td> <td style="text-align: right;">RM{{ $data->net }}</td>
+                <td style="text-align: right;">Discount:</td> <td style="text-align: right;">RM{{ number_format($data->discount, 2, '.', ',') }}</td>
                 </tr>
                 <tr>
-                <td style="text-align: right;">Deposit:</td> <td style="text-align: right;">RM{{ $data->deposit }}</td>
+                <td style="text-align: right;">Net:</td> <td style="text-align: right;">RM{{ number_format($data->net, 2, '.', ',') }}</td>
                 </tr>
                 <tr>
-                <td style="text-align: right;">Balance:</td> <td style="text-align: right;">RM{{ $data->balance }}</td>
+                <td style="text-align: right;">Deposit:</td> <td style="text-align: right;">RM{{ number_format($data->deposit, 2, '.', ',') }}</td>
                 </tr>
-                @endif
+                <tr>
+                <td style="text-align: right;">Balance:</td> <td style="text-align: right;">RM{{ number_format($data->balance, 2, '.', ',') }}</td>
+                </tr>
               </table>
+            </div>
+              @else
+              <hr/>
+              <table class="borderless righthandside">
+                <tr>
+                <td style="text-align: right;">Total:</td> <td style="text-align: right;">RM{{ number_format($data->total, 2, '.', ',') }}</td>
+                </tr>
+              </table>
+              
+              @endif
     </div>
 
 </body>

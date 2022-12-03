@@ -120,27 +120,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     findItem: function findItem(itemNumber, index) {
-      var _this4 = this;
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get("/products/find/".concat(itemNumber)).then(function (r) {
-        if (r.data && r.data.data) {
-          _this4.items.splice(index, 1, {
-            item_number: itemNumber,
-            description: r.data.data.description,
-            original_price: r.data.data.original_price,
-            selling_price: r.data.data.selling_price,
-            quantity: 0,
-            sub_total: 0,
-            checked: '0'
-          });
-          _this4.calculateTotal();
-        }
-      })["catch"](function (err) {
-        // this.isLoading = false;
-        _this4.$bvToast.toast(err, {
-          title: 'Error',
-          autoHideDelay: 5000
-        });
+      this.items.splice(index, 1, {
+        item_number: itemNumber.item_number,
+        description: itemNumber.description,
+        original_price: itemNumber.original_price,
+        selling_price: itemNumber.selling_price,
+        quantity: 0,
+        sub_total: 0
       });
+      this.calculateTotal();
+      // axios
+      //     .get(`/products/find/${itemNumber}`)
+      //     .then((r) => {
+      //         if (r.data && r.data.data) {
+      //             this.items.splice(index, 1, { item_number: itemNumber, description: r.data.data.description, original_price: r.data.data.original_price, selling_price: r.data.data.selling_price, quantity: 0, sub_total: 0, checked: '0' })
+      //             this.calculateTotal()
+      //         }
+      //     })
+      //     .catch((err) => {
+      //         // this.isLoading = false;
+      //         this.$bvToast.toast(err, {
+      //             title: 'Error',
+      //             autoHideDelay: 5000
+      //         });
+      //     });
     },
     calculateSubtotal: function calculateSubtotal(index, product) {
       var sellingPrice = parseFloat(product.selling_price);
@@ -185,7 +188,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }, "remark", null);
     },
     submit: function submit() {
-      var _this5 = this;
+      var _this4 = this;
       this.calculateTotal();
       this.isLoading = true;
       var method = 'post';
@@ -198,29 +201,29 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         url: url,
         data: this.form
       }).then(function (r) {
-        if (!_this5.id && r.data.data.id) {
-          _this5.$swal('Successfully Created');
+        if (!_this4.id && r.data.data.id) {
+          _this4.$swal('Successfully Created');
         } else {
-          _this5.$swal('Successfully updated');
+          _this4.$swal('Successfully updated');
         }
-        _this5.isLoading = false;
-        _this5.$router.push('/sales');
+        _this4.isLoading = false;
+        _this4.$router.push('/sales');
       })["catch"](function (e) {
-        _this5.$swal('An error has ocured' + e);
-        _this5.isLoading = false;
+        _this4.$swal('An error has ocured' + e);
+        _this4.isLoading = false;
       });
     },
     getinvoiceData: function getinvoiceData() {
-      var _this6 = this;
+      var _this5 = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default().get("/sales/get/".concat(this.id)).then(function (r) {
         if (r.data && r.data.data) {
-          _this6.form = r.data.data;
-          _this6.selectedCustomer = _this6.form.customer_id;
-          _this6.items = r.data.items;
+          _this5.form = r.data.data;
+          _this5.selectedCustomer = _this5.form.customer_id;
+          _this5.items = r.data.items;
         }
       })["catch"](function (err) {
         // this.isLoading = false;
-        _this6.$bvToast.toast(err, {
+        _this5.$bvToast.toast(err, {
           title: 'Error',
           autoHideDelay: 5000
         });
@@ -414,13 +417,18 @@ var render = function render() {
         label: "Item Number",
         "label-for": "item_number"
       }
-    }, [_c("b-form-select", {
+    }, [_c("v-select", {
+      staticStyle: {
+        "font-size": "1rem"
+      },
       attrs: {
         id: "item_number",
-        disabled: item.checked == "1"
+        name: "item_number",
+        label: "item_number",
+        options: _vm.products
       },
       on: {
-        change: function change($event) {
+        input: function input($event) {
           return _vm.findItem(item.item_number, index);
         }
       },
@@ -431,17 +439,7 @@ var render = function render() {
         },
         expression: "item.item_number"
       }
-    }, _vm._l(_vm.products, function (product, p) {
-      return _c("b-form-select-option", {
-        key: p,
-        staticClass: "mb-2 mr-sm-2 mb-sm-0",
-        attrs: {
-          value: product.item_number,
-          id: "item_number",
-          name: "item_number"
-        }
-      }, [_vm._v("\n                                    " + _vm._s(product.item_number) + " ")]);
-    }), 1)], 1)], 1), _vm._v(" "), _c("b-col", {
+    })], 1)], 1), _vm._v(" "), _c("b-col", {
       attrs: {
         md: "4"
       }
