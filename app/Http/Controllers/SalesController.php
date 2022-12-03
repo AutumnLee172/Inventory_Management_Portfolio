@@ -22,10 +22,10 @@ class SalesController extends Controller
     public function index()
     {
         $sales = Sale::all();
-        for($s = 0; $s < count($sales); $s++)
-        {
-            $sales[$s]->created_at = $sales[$s]->created_at->format('d M Y');
-        }        
+        // for($s = 0; $s < count($sales); $s++)
+        // {
+        //     $sales[$s]->created_at = $sales[$s]->created_at->format('d M Y');
+        // }        
 
         return response()->json([
             'data' => $sales
