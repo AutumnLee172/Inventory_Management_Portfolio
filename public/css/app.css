@@ -27147,6 +27147,13 @@ pre[class*=language-] {
     height: 160px;
 }
 
+.b-form-btn-label-control.form-control {
+  display: flex;
+  align-items: stretch;
+  padding: 0;
+  background-image: none;
+}
+
 @media only screen and (max-width: 1270px) {
     .card-height{
         height: 200px;

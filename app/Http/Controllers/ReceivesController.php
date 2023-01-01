@@ -10,6 +10,7 @@ use App\Models\Product;
 use Illuminate\Support\Str;
 use PDF;
 use DB;
+use Carbon\Carbon;
 
 class ReceivesController extends Controller
 {
@@ -44,7 +45,8 @@ class ReceivesController extends Controller
         $receive->deposit = ($request->has('deposit') && !empty($request->get('deposit'))) ? $request->get('deposit') : 0;
         $receive->balance = ($request->has('balance') && !empty($request->get('balance'))) ? $request->get('balance') : 0;
         $receive->status = "Completed";
-        $receive->created_date = new DateTime();
+        $today = new DateTime();        
+        $receive->created_date = ($request->has('date') && !empty($request->get('date'))) ? $request->get('date').' 01:00:00' : $today;
         $receive->transaction_id = $uuid;
 
             if($receive->save()){
@@ -105,6 +107,7 @@ class ReceivesController extends Controller
 
     public function getReceiveOrder($id){
         $order = Receive::find($id);
+        $order->date = $order->created_date;
         $contents = Content::select('item_number','description', 'original_price', 'selling_price', 'quantity' , 'sub_total')->where('transaction_id',$order->transaction_id)->get();
         return response()->json([
             'data' => $order,
@@ -115,6 +118,13 @@ class ReceivesController extends Controller
     public function update($id, Request $request){
         DB::beginTransaction();
         $sale = Receive::find($id);    
+       
+        // $date = Carbon::createFromFormat('Y-m-d H:i:s', $request->get('date'))->format('Y-m-d');
+        // $prevDate = Carbon::createFromFormat('Y-m-d H:i:s', $sale->created_date)->format('Y-m-d');
+        // if($date->notEqualTo($prevDate)){
+        //     // $sale->created_date = $date;
+        // }
+        
         $sale->supplier_id = ($request->has('supplier_id') && !empty($request->get('supplier_id'))) ? $request->get('supplier_id') : '';
         $sale->supplier_name = ($request->has('supplier_name') && !empty($request->get('supplier_name'))) ? $request->get('supplier_name') : '';
         $sale->phone_number = ($request->has('phone_number') && !empty($request->get('phone_number'))) ? $request->get('phone_number') : '';
