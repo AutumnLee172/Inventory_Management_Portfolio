@@ -258,6 +258,7 @@ export default {
             var sellingPrice = parseFloat(product.selling_price)
             var number = parseFloat(product.quantity)
             var subtotal = sellingPrice * number
+            var subtotal = subtotal.toFixed(2)
             this.items.splice(index, 1, { item_number: product.item_number, description: product.description, original_price: product.original_price, selling_price: product.selling_price, quantity: product.quantity, sub_total: subtotal, checked: product.checked })
             this.calculateTotal()
         },

@@ -156,6 +156,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var price = parseFloat(product.original_price);
       var number = parseFloat(product.quantity);
       var subtotal = price * number;
+      var subtotal = subtotal.toFixed(2);
       this.items.splice(index, 1, {
         item_number: product.item_number,
         description: product.description,
