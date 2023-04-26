@@ -34,7 +34,8 @@ class InvoicesController extends Controller
         $invoice->net = ($request->has('net') && !empty($request->get('net'))) ? $request->get('net') : 0;
         $invoice->deposit = ($request->has('deposit') && !empty($request->get('deposit'))) ? $request->get('deposit') : 0;
         $invoice->balance = ($request->has('balance') && !empty($request->get('balance'))) ? $request->get('balance') : 0;
-        $invoice->created_date = new DateTime();
+        $today = new DateTime();        
+        $invoice->created_date = ($request->has('date') && !empty($request->get('date'))) ? $request->get('date').' 01:00:00' : $today;
         $invoice->status = "Pending";
         $invoice->transaction_id = $uuid;
 
@@ -127,6 +128,7 @@ class InvoicesController extends Controller
 
     public function getInvoice($id){
         $invoice = Invoice::find($id);
+        $invoice->date = $invoice->created_date;
         $contents = Content::select('item_number','description', 'original_price', 'selling_price', 'quantity' , 'sub_total')->where('transaction_id',$invoice->transaction_id)->get();
         return response()->json([
             'data' => $invoice,
@@ -147,6 +149,8 @@ class InvoicesController extends Controller
         $sale->net = ($request->has('net') && !empty($request->get('net'))) ? $request->get('net') : 0;
         $sale->deposit = ($request->has('deposit') && !empty($request->get('deposit'))) ? $request->get('deposit') : 0;
         $sale->balance = ($request->has('balance') && !empty($request->get('balance'))) ? $request->get('balance') : 0;
+        $today = new DateTime();        
+        $sale->created_date = ($request->has('date') && !empty($request->get('date'))) ? $request->get('date').' 01:00:00' : $today;
 
             if($sale->save()){
                 DB::commit();

@@ -37,7 +37,8 @@ class CashController extends Controller
         $cash->deposit = ($request->has('deposit') && !empty($request->get('deposit'))) ? $request->get('deposit') : 0;
         $cash->balance = ($request->has('balance') && !empty($request->get('balance'))) ? $request->get('balance') : 0;
         $cash->status = "Completed";
-        $cash->created_date = new DateTime();
+        $today = new DateTime();        
+        $cash->created_date = ($request->has('date') && !empty($request->get('date'))) ? $request->get('date').' 01:00:00' : $today;
         $cash->transaction_id = $uuid;
 
             if($cash->save()){
@@ -129,6 +130,8 @@ class CashController extends Controller
         $sale->net = ($request->has('net') && !empty($request->get('net'))) ? $request->get('net') : 0;
         $sale->deposit = ($request->has('deposit') && !empty($request->get('deposit'))) ? $request->get('deposit') : 0;
         $sale->balance = ($request->has('balance') && !empty($request->get('balance'))) ? $request->get('balance') : 0;
+        $today = new DateTime();        
+        $sale->created_date = ($request->has('date') && !empty($request->get('date'))) ? $request->get('date').' 01:00:00' : $today;
 
             if($sale->save()){
                 DB::commit();
@@ -177,6 +180,7 @@ class CashController extends Controller
 
     public function getCashSale($id){
         $sale = Cashsale::find($id);
+        $sale->date = $sale->created_date;
         $contents = Content::select('item_number','description', 'original_price', 'selling_price', 'quantity' , 'sub_total')->where('transaction_id',$sale->transaction_id)->get();
         return response()->json([
             'data' => $sale,

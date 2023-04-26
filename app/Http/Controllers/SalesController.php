@@ -49,7 +49,8 @@ class SalesController extends Controller
         $sale->net = ($request->has('net') && !empty($request->get('net'))) ? $request->get('net') : 0;
         $sale->deposit = ($request->has('deposit') && !empty($request->get('deposit'))) ? $request->get('deposit') : 0;
         $sale->balance = ($request->has('balance') && !empty($request->get('balance'))) ? $request->get('balance') : 0;
-        $sale->created_date = new DateTime();
+        $today = new DateTime();        
+        $sale->created_date = ($request->has('date') && !empty($request->get('date'))) ? $request->get('date').' 01:00:00' : $today;
         $sale->status = "Pending";
         $sale->transaction_id = $uuid;
 
@@ -122,6 +123,7 @@ class SalesController extends Controller
 
     public function getSale($id){
         $sale = Sale::find($id);
+        $sale->date = $sale->created_date;
         $contents = Content::select('item_number','description', 'original_price', 'selling_price', 'quantity' , 'sub_total', 'checked')->where('transaction_id',$sale->transaction_id)->get();
         return response()->json([
             'data' => $sale,
@@ -151,6 +153,8 @@ class SalesController extends Controller
         $sale->net = ($request->has('net') && !empty($request->get('net'))) ? $request->get('net') : 0;
         $sale->deposit = ($request->has('deposit') && !empty($request->get('deposit'))) ? $request->get('deposit') : 0;
         $sale->balance = ($request->has('balance') && !empty($request->get('balance'))) ? $request->get('balance') : 0;
+        $today = new DateTime();        
+        $sale->created_date = ($request->has('date') && !empty($request->get('date'))) ? $request->get('date').' 01:00:00' : $today;
 
             if($sale->save()){
                 DB::commit();

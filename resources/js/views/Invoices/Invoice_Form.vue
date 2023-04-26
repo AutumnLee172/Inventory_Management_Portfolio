@@ -38,6 +38,11 @@
                                 <b-form-input id="remark" name="remark" v-model="form.remark"></b-form-input>
                             </b-form-group>
                         </b-col>
+                        <b-col md="6">
+                            <b-form-group label="Date" label-for="date">
+                                <b-form-datepicker id="date" name="date" v-model="form.date" style="height:calc(1.5em + 0.75rem + 2px);" ></b-form-datepicker>
+                            </b-form-group>
+                        </b-col>
                     </b-row>
                     <hr class="horizontal dark">
                     <p class="text-uppercase text-sm">Items Information</p>
@@ -305,6 +310,7 @@ export default {
                 phone_number: null,
                 address: null,
                 remark: null,
+                date: null,
                 cart: null,
                 total: 0,
                 discount: 0,

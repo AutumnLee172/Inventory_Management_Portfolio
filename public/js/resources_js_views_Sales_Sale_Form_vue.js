@@ -183,6 +183,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         phone_number: null,
         address: null,
         remark: null,
+        date: null,
         cart: null,
         total: 0,
         discount: 0,
@@ -402,6 +403,30 @@ var render = function render() {
         _vm.$set(_vm.form, "remark", $$v);
       },
       expression: "form.remark"
+    }
+  })], 1)], 1), _vm._v(" "), _c("b-col", {
+    attrs: {
+      md: "6"
+    }
+  }, [_c("b-form-group", {
+    attrs: {
+      label: "Date",
+      "label-for": "date"
+    }
+  }, [_c("b-form-datepicker", {
+    staticStyle: {
+      height: "calc(1.5em + 0.75rem + 2px)"
+    },
+    attrs: {
+      id: "date",
+      name: "date"
+    },
+    model: {
+      value: _vm.form.date,
+      callback: function callback($$v) {
+        _vm.$set(_vm.form, "date", $$v);
+      },
+      expression: "form.date"
     }
   })], 1)], 1)], 1), _vm._v(" "), _c("hr", {
     staticClass: "horizontal dark"
