@@ -14,7 +14,7 @@
                 <h2>Products table</h2>
             </div>
             <b-table :busy="isBusy" class="table align-items-center mb-0" id="merchant-table" :fields="fields"
-                head-variant="light" :items="items" sort-by="id" responsive="sm" :per-page="perPage"
+                head-variant="light" :items="items" sort-by="item_number" responsive="sm" :per-page="perPage"
                 :current-page="currentPage">
                 <template #cell(Edit)="row">
                     <b-button variant="primary" v-b-modal.modal-2 @click="id=row.item.id">

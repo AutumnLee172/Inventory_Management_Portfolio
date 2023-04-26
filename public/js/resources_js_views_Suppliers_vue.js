@@ -252,7 +252,7 @@ var render = function render() {
       fields: _vm.fields,
       "head-variant": "light",
       items: _vm.items,
-      "sort-by": "id",
+      "sort-by": "name",
       responsive: "sm",
       "per-page": _vm.perPage,
       "current-page": _vm.currentPage

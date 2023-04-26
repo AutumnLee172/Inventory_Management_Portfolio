@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use DateTime;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Content;
 
 class ProductsController extends Controller
 {
@@ -61,13 +62,21 @@ class ProductsController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        $productnumber = Product::find($request->get('id'));
         $product->fill($request->all());
         $product->updated_at = new DateTime();
         $product->save();
 
+        //change content item number
+        Content::where('item_number', '=', $productnumber->item_number)
+        ->update(['item_number' => $request->get('item_number')]);    
+
         return response()->json([
             'status' => true,
-            'data' => $product
+            'data' => $product,
+            'request_number' => $request->get('item_number'),
+            'product_number' => $productnumber->item_number,
+
         ]);
     }
 

@@ -74,7 +74,7 @@ class ReceivesController extends Controller
             $cash_quantity = (float) $i['quantity'];
             $new_quantity = $current_quantity + $cash_quantity;
             $product->quantity = $new_quantity;
-            $product->original_price = $content->original_price;
+            // $product->original_price = $content->original_price;
             $product->save();
         }
         
@@ -172,7 +172,7 @@ class ReceivesController extends Controller
             $invoice_quantity = (float) $i['quantity'];
             $new_quantity = $current_quantity + $invoice_quantity;
             $product->quantity = $new_quantity;
-            $product->original_price = $content->original_price;
+            // $product->original_price = $content->original_price;
             $product->save();
         }
         
